@@ -5,20 +5,20 @@ var SPRITE_GRASS_ARRAY = ["sprites/grass001.gif"];
 
 
 function building(height, flammable, time) {
-	this.ID = Math.floor(Math.random()*10000);
-	this.height = height;
-	this.flammable = flammable;
-	this.time = time;
-	this.sprite = SPRITE_BUILDING_ARRAY[Math.floor(Math.random() * SPRITE_BUILDING_ARRAY.length)];
-	this.onFire = false;
-	this.timeLeft = time;
-	this.health = 30;
+	var ID = Math.floor(Math.random()*10000);
+	var height = height;
+	var flammable = flammable;
+	var time = time;
+	var sprite = SPRITE_BUILDING_ARRAY[Math.floor(Math.random() * SPRITE_BUILDING_ARRAY.length)];
+	var onFire = false;
+	var timeLeft = time;
+	var health = 30;
 
-	building.prototype.height = function() { return this.height; }
-	building.prototype.spray = function() { this.timeLeft--; this.health--; }
-	building.prototype.update  = function()
+	this.height = function() { return height; }
+	this.spray = function() { timeLeft--; health--; }
+	this.update  = function()
 	{
-		if(this.onFire && this.health == 0)
+		if(onFire && health == 0)
 		{
 			//change sprite to burnt down
 			//change flammable to 0
@@ -35,13 +35,14 @@ function building(height, flammable, time) {
 }
 
 function grass(position) {
-	this.ID = Math.floor(Math.random()*10000);
-	this.flammable = 1;
-	this.sprite = SPRITE_GRASS_ARRAY[Math.floor(Math.random() * SPRITE_GRASS_ARRAY.length)];
+	var ID = Math.floor(Math.random()*10000);
+	var flammable = 1;
+	var sprite = SPRITE_GRASS_ARRAY[Math.floor(Math.random() * SPRITE_GRASS_ARRAY.length)];
+	this.x = Math.floor( (position*gameCanvas.blockSize)%(gameCanvas.canvasWidth) );
+	this.y = ( Math.floor((position*gameCanvas.blockSize)/(gameCanvas.canvasWidth))*gameCanvas.blockSize );
 
-
-	grass.prototype.repaint(canvas){
-		canvas.fillStyle = "rgb(200,0,0)";
-		canvas.fillRect(10, 10, 10, 10);
+	grass.prototype.repaint = function (canvas) {
+		canvas.fillStyle = "rgb(1,142,14)";
+		canvas.fillRect(this.x, this.y, gameCanvas.blockSize, gameCanvas.blockSize);
 	}
 }
