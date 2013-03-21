@@ -12,12 +12,15 @@ function gameCanvas(){
 
 	gameCanvas.prototype.restart = function() {
 		for(var i = 0; i < this.grid.length; i++)
-			this.grid[i] = new grass(i);
+			if( Math.floor((Math.random()*10)+1) == 10)
+				this.grid[i] = new building(i, 1, 1, 30);
+			else
+				this.grid[i] = new grass(i);
 	}
 
 	gameCanvas.prototype.repaint = function() {
 		for(var i = 0; i < this.grid.length; i++)
 			this.grid[i].repaint(canvas);
 	}
-	
+
 }

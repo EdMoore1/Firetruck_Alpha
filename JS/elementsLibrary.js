@@ -4,7 +4,7 @@ var SPRITE_GRASS_ARRAY = ["sprites/grass001.gif"];
 
 
 
-function building(height, flammable, time) {
+function building(position, height, flammable, time) {
 	var ID = Math.floor(Math.random()*10000);
 	var height = height;
 	var flammable = flammable;
@@ -13,6 +13,8 @@ function building(height, flammable, time) {
 	var onFire = false;
 	var timeLeft = time;
 	var health = 30;
+	this.x = Math.floor( (position*gameCanvas.blockSize)%(gameCanvas.canvasWidth) );
+	this.y = ( Math.floor((position*gameCanvas.blockSize)/(gameCanvas.canvasWidth))*gameCanvas.blockSize );
 
 	this.height = function() { return height; }
 	this.spray = function() { timeLeft--; health--; }
@@ -30,7 +32,11 @@ function building(height, flammable, time) {
 			//change sprite to not on fire
 			//change onFire to 0
 		}
+	}
 
+	building.prototype.repaint = function(canvas) {	
+		canvas.fillStyle = "rgb(157,157,147)";
+		canvas.fillRect(this.x, this.y, gameCanvas.blockSize, gameCanvas.blockSize);	
 	}
 }
 
