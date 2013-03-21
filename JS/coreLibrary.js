@@ -2,7 +2,7 @@ function gameCanvas(){
 	//CONFIG Settings
 	gameCanvas.canvasWidth = 700;
 	gameCanvas.canvasHeight = 700;
-	gameCanvas.blockSize = 10;
+	gameCanvas.blockSize = 25;
 	var c = document.getElementById("game");
 	var canvas = c.getContext("2d");
 
