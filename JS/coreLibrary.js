@@ -2,13 +2,13 @@ function gameCanvas(){
 	//CONFIG Settings
 	gameCanvas.canvasWidth = 700;
 	gameCanvas.canvasHeight = 700;
-	gameCanvas.blockSize = 25;
+	gameCanvas.blockSize = 35;
 	var c = document.getElementById("game");
 	var canvas = c.getContext("2d");
 
 	//Core Variables
 	this.grid = Array( (gameCanvas.canvasHeight/gameCanvas.blockSize)*
-					   (gameCanvas.canvasWidth/gameCanvas.blockSize) );
+					   	 (gameCanvas.canvasWidth/gameCanvas.blockSize) );
 
 	gameCanvas.prototype.restart = function() {
 		for(var i = 0; i < this.grid.length; i++)

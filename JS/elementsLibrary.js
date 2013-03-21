@@ -5,14 +5,15 @@ var SPRITE_GRASS_ARRAY = ["sprites/grass001.gif"];
 
 
 function building(position, height, flammable, time) {
-	this.ID = Math.floor(Math.random()*10000);
-	var height = height;
-	var flammable = flammable;
-	var time = time;
-	var sprite = SPRITE_BUILDING_ARRAY[Math.floor(Math.random() * SPRITE_BUILDING_ARRAY.length)];
-	var onFire = false;
-	var timeLeft = time;
-	var health = 30;
+	this.ID = position;
+	this.height = height;
+	this.flammable = flammable;
+	this.time = time;
+	this.sprite = SPRITE_BUILDING_ARRAY[Math.floor(Math.random() * SPRITE_BUILDING_ARRAY.length)];
+	this.onFire = false;
+	this.timeLeft = time;
+	this.health = 30;
+	this.color = "rgb(157,157,147)";		//Building
 	this.x = Math.floor( (position*gameCanvas.blockSize)%(gameCanvas.canvasWidth) );
 	this.y = ( Math.floor((position*gameCanvas.blockSize)/(gameCanvas.canvasWidth))*gameCanvas.blockSize );
 
@@ -20,9 +21,11 @@ function building(position, height, flammable, time) {
 	this.spray = function() { timeLeft--; health--; }
 	this.update  = function()
 	{
-		if(onFire && health == 0)
+		if(this.onFire && this.health == 0)
 		{
 			//change sprite to burnt down
+			this.color = "rgb(77,74,74)"
+
 			//change flammable to 0
 			//change onfire to 0
 			//change height to 0
@@ -35,7 +38,7 @@ function building(position, height, flammable, time) {
 	}
 
 	building.prototype.repaint = function(canvas) {	
-		canvas.fillStyle = "rgb(157,157,147)";
+		canvas.fillStyle = this.color;
 		canvas.fillRect(this.x, this.y, gameCanvas.blockSize, gameCanvas.blockSize);	
 	}
 }
@@ -43,14 +46,21 @@ function building(position, height, flammable, time) {
 
 
 function grass(position) {
-	this.ID = Math.floor(Math.random()*10000);
-	var flammable = 1;
-	var sprite = SPRITE_GRASS_ARRAY[Math.floor(Math.random() * SPRITE_GRASS_ARRAY.length)];
+	this.ID = position;
+	this.flammable = 1;
+	this.sprite = SPRITE_GRASS_ARRAY[Math.floor(Math.random() * SPRITE_GRASS_ARRAY.length)];
+	this.onFire = false;
+	this.color = "rgb(1,142,14);";
 	this.x = Math.floor( (position*gameCanvas.blockSize)%(gameCanvas.canvasWidth) );
 	this.y = ( Math.floor((position*gameCanvas.blockSize)/(gameCanvas.canvasWidth))*gameCanvas.blockSize );
 
+	this.update = function() {
+		//Evaluate if to catch on fire
+
+	}
+
 	grass.prototype.repaint = function (canvas) {
-		canvas.fillStyle = "rgb(1,142,14)";
+		canvas.fillStyle = this.color;
 		canvas.fillRect(this.x, this.y, gameCanvas.blockSize, gameCanvas.blockSize);
 	}
 }
