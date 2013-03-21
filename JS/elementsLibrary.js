@@ -5,7 +5,7 @@ var SPRITE_GRASS_ARRAY = ["sprites/grass001.gif"];
 
 
 function building(position, height, flammable, time) {
-	var ID = Math.floor(Math.random()*10000);
+	this.ID = Math.floor(Math.random()*10000);
 	var height = height;
 	var flammable = flammable;
 	var time = time;
@@ -40,8 +40,10 @@ function building(position, height, flammable, time) {
 	}
 }
 
+
+
 function grass(position) {
-	var ID = Math.floor(Math.random()*10000);
+	this.ID = Math.floor(Math.random()*10000);
 	var flammable = 1;
 	var sprite = SPRITE_GRASS_ARRAY[Math.floor(Math.random() * SPRITE_GRASS_ARRAY.length)];
 	this.x = Math.floor( (position*gameCanvas.blockSize)%(gameCanvas.canvasWidth) );
