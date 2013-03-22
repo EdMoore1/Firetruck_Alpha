@@ -23,4 +23,8 @@ function gameCanvas(){
 			this.grid[i].repaint(canvas);
 	}
 
+	gameCanvas.prototype.burn = function() {
+		this.grid[Math.floor(Math.random() * this.grid.length)].burn();
+	}
+
 }
