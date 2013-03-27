@@ -63,7 +63,7 @@ function Building(position, height, flammable, time) {
 	}
 
 	Building.prototype.burn = function () { this.color = ColorFire; this.onFire = true; }
-
+	Building.prototype.unHighlight = function () { this.color = ColorBuilding; }
 	Building.prototype.repaint = function(canvas) {	
 		canvas.fillStyle = this.color;
 		canvas.fillRect(this.x, this.y, GameCanvas.blockSize, GameCanvas.blockSize);	
@@ -88,7 +88,8 @@ function Grass(position) {
 	}
 
 	Grass.prototype.burn = function () { this.color = ColorFire; this.onFire = true; }
-
+	Grass.prototype.highlight = function () { this.color = ColorHighlighted; }
+	Grass.prototype.unHighlight = function() { this.color = ColorGrass; }
 	Grass.prototype.repaint = function (canvas) {
 		canvas.fillStyle = this.color;
 		canvas.fillRect(this.x, this.y, GameCanvas.blockSize, GameCanvas.blockSize);
@@ -109,6 +110,8 @@ function FireStation(position) {
 		canvas.fillStyle = this.color;
 		canvas.fillRect(this.x, this.y, GameCanvas.blockSize*2, GameCanvas.blockSize*2);
 	}
+
+	FireStation.prototype.unHighlight = function () { this.color = ColorFireStation; }
 }
 
 function EmptyBlock(position) {
@@ -120,6 +123,7 @@ function EmptyBlock(position) {
 
 
 	EmptyBlock.prototype.repaint = function( canvas ) { /* Do Nothing */ };
+	EmptyBlock.prototype.unHighlight = function() { /* Do Nothing */ }
 }
 
 function Road(position) {
@@ -141,7 +145,6 @@ function Road(position) {
 		canvas.fillRect(this.x, this.y, GameCanvas.blockSize*2, GameCanvas.blockSize*2);
 	}
 
-	Road.prototype.highlight = function () {
-		this.color = ColorHighlighted;
-	}
+	Road.prototype.highlight = function () { this.color = ColorHighlighted; }
+	Road.prototype.unHighlight = function () { this.color = ColorRoad; }
 }
