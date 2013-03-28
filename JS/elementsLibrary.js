@@ -142,7 +142,7 @@ function Road(position) {
 
 	Road.prototype.repaint = function ( canvas ) { 
 		canvas.fillStyle = this.color;
-		canvas.fillRect(this.x, this.y, GameCanvas.blockSize*2, GameCanvas.blockSize*2);
+		canvas.fillRect(this.x, this.y, GameCanvas.blockSize, GameCanvas.blockSize);
 	}
 
 	Road.prototype.highlight = function () { this.color = ColorHighlighted; }

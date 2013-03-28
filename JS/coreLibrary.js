@@ -1,15 +1,16 @@
 function GameCanvas(){
 	//CONFIG Settings
-	GameCanvas.canvasWidth = 700;
-	GameCanvas.canvasHeight = 700;
-	//GameCanvas.blockSize = 35;
-	GameCanvas.blockSize = 25;
+	GameCanvas.canvasWidth = 1024;
+	GameCanvas.canvasHeight = 640;
+	GameCanvas.blockSize = 32;			//Should be one of 1, 2, 4, 8, 16, 32, 64, 128
 	var c = document.getElementById("game");
 	var canvas = c.getContext("2d");
 
 	//Core Variables
 	var grid = Array( (GameCanvas.canvasHeight/GameCanvas.blockSize)*
 					   	 (GameCanvas.canvasWidth/GameCanvas.blockSize) );
+
+	var dragging = false;
 
 	GameCanvas.prototype.restart = function() {
 		for(var i = 0; i < grid.length; i++)
@@ -28,7 +29,9 @@ function GameCanvas(){
 		grid[GameCanvas.canvasWidth/GameCanvas.blockSize+1] = new EmptyBlock(i);
 	}
 
-	GameCanvas.prototype.repaint = function() {
+	GameCanvas.prototype.repaint = function() { GameCanvas.repaint(); }
+
+	GameCanvas.repaint = function() {
 		for(var i = 0; i < grid.length; i++)
 			grid[i].repaint(canvas);
 	}
@@ -37,28 +40,49 @@ function GameCanvas(){
 		grid[Math.floor(Math.random() * grid.length)].burn();
 	}
 
-	c.addEventListener("click", function(e){
-		var x = e.pageX - c.offsetLeft;
-		var y = e.pageY - c.offsetTop;
+	c.addEventListener("mousedown", function(e){
+		var index = CalculateIndex(e.pageX, e.pageY);
+
+		dragging = true;
+
+		if(!grid[index].solid) {
+			grid[index].highlight();
+			grid[index].repaint(canvas);
+		}
+	}, false);
+
+	c.addEventListener("mouseup", function(e) {
+		dragging = false;
+
+		GameCanvas.UnhightlightAll();
+	}, false);
+
+
+	c.addEventListener("mousemove", function(e) {
+
+		if(dragging) {
+			var index = CalculateIndex(e.pageX, e.pageY);
+
+			if(!grid[index].solid) {
+				grid[index].highlight();
+				grid[index].repaint(canvas);
+			}
+		}
+	});
+
+	var CalculateIndex = function(pageX, pageY) {
+		var x = pageX - c.offsetLeft;
+		var y = pageY - c.offsetTop;
 
 		var posX = Math.floor(x/GameCanvas.blockSize);
 		var posY = Math.floor(y/GameCanvas.blockSize);
 
-		var index = (posY)*(GameCanvas.canvasHeight/GameCanvas.blockSize) + (posX);
+		return (posY)*(GameCanvas.canvasWidth/GameCanvas.blockSize) + (posX);
+	}
 
-
-		if(grid[index].solid) {
-			//Error and disable all highlighted tiles
-			for(var i = 0; i < grid.length; i++)
-				grid[i].unHighlight();
-		}else{
-			//Highlight the correct tile
-			grid[index].highlight();
-			grid[index].repaint(canvas);
-		}
-
-
-
-		console.log('Clicked at [' + x + ',' + y +']->[' + posX + ',' + posY + ']->[' + index + ']' );
-	}, false);
+	GameCanvas.UnhightlightAll = function() {
+		for(var i = 0; i < grid.length; i++)
+			grid[i].unHighlight();
+		GameCanvas.repaint();
+	}
 }
