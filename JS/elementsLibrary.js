@@ -26,6 +26,8 @@ function Building(position, height, flammable, time) {
 	this.solid = true;
 	this.x = Math.floor( (position*GameCanvas.blockSize)%(GameCanvas.canvasWidth) );
 	this.y = ( Math.floor((position*GameCanvas.blockSize)/(GameCanvas.canvasWidth))*GameCanvas.blockSize );
+	this.type = "Building";
+	this.highlighted = false;
 
 	this.height = function() { return height; }
 	this.spray = function()
@@ -63,7 +65,8 @@ function Building(position, height, flammable, time) {
 	}
 
 	Building.prototype.burn = function () { this.color = ColorFire; this.onFire = true; }
-	Building.prototype.unHighlight = function () { this.color = ColorBuilding; }
+	Building.prototype.highlight = function () { this.highlighted = true; }
+	Building.prototype.unHighlight = function () { this.color = ColorBuilding; this.highlighted = false; }
 	Building.prototype.repaint = function(canvas) {	
 		canvas.fillStyle = this.color;
 		canvas.fillRect(this.x, this.y, GameCanvas.blockSize, GameCanvas.blockSize);	
@@ -81,6 +84,8 @@ function Grass(position) {
 	this.solid = false;
 	this.x = Math.floor( (position*GameCanvas.blockSize)%(GameCanvas.canvasWidth) );
 	this.y = ( Math.floor((position*GameCanvas.blockSize)/(GameCanvas.canvasWidth))*GameCanvas.blockSize );
+	this.type = "Grass";
+	this.highlighted = false;
 
 	this.update = function() {
 		//Evaluate if to catch on fire
@@ -88,8 +93,8 @@ function Grass(position) {
 	}
 
 	Grass.prototype.burn = function () { this.color = ColorFire; this.onFire = true; }
-	Grass.prototype.highlight = function () { this.color = ColorHighlighted; }
-	Grass.prototype.unHighlight = function() { this.color = ColorGrass; }
+	Grass.prototype.highlight = function () { this.color = ColorHighlighted; this.highlighted = true; }
+	Grass.prototype.unHighlight = function() { this.color = ColorGrass; this.highlighted = false; }
 	Grass.prototype.repaint = function (canvas) {
 		canvas.fillStyle = this.color;
 		canvas.fillRect(this.x, this.y, GameCanvas.blockSize, GameCanvas.blockSize);
@@ -105,25 +110,28 @@ function FireStation(position) {
 	this.color = ColorFireStation;
 	this.x = Math.floor( (position*GameCanvas.blockSize)%(GameCanvas.canvasWidth) );
 	this.y = ( Math.floor((position*GameCanvas.blockSize)/(GameCanvas.canvasWidth))*GameCanvas.blockSize );
-
+	this.type = "FireStation";
+	this.highlighted = false;
+	
 	FireStation.prototype.repaint = function (canvas) {
 		canvas.fillStyle = this.color;
-		canvas.fillRect(this.x, this.y, GameCanvas.blockSize*2, GameCanvas.blockSize*2);
+		canvas.fillRect(this.x, this.y, GameCanvas.blockSize, GameCanvas.blockSize);
 	}
 
-	FireStation.prototype.unHighlight = function () { this.color = ColorFireStation; }
+	FireStation.prototype.highlight = function () { this.color = ColorHighlighted; this.highlighted = true; }
+	FireStation.prototype.unHighlight = function () { this.color = ColorFireStation; this.highlighted = false; }
 }
 
 function EmptyBlock(position) {
-	this.ID = position;
 	this.flammable = 0;
 	this.spite = "";
 	this.onFire = false;
 	this.solid = true;
+	this.type = "EmptyBlock";
+	this.highlighted = false;
 
-
-	EmptyBlock.prototype.repaint = function( canvas ) { /* Do Nothing */ };
-	EmptyBlock.prototype.unHighlight = function() { /* Do Nothing */ }
+	EmptyBlock.prototype.repaint = function( canvas ) { /* Do Nothing */ this.highlighted = true; };
+	EmptyBlock.prototype.unHighlight = function() { /* Do Nothing */ this.highlighted = false; }
 }
 
 function Road(position) {
@@ -135,6 +143,7 @@ function Road(position) {
 	this.onFire = false;
 	this.solid = false;
 	this.highlighted = false;
+	this.type = "Road";
 
 	//Calculate the correct sprite to use
 
@@ -145,6 +154,6 @@ function Road(position) {
 		canvas.fillRect(this.x, this.y, GameCanvas.blockSize, GameCanvas.blockSize);
 	}
 
-	Road.prototype.highlight = function () { this.color = ColorHighlighted; }
-	Road.prototype.unHighlight = function () { this.color = ColorRoad; }
+	Road.prototype.highlight = function () { this.color = ColorHighlighted; this.highlighted = true; }
+	Road.prototype.unHighlight = function () { this.color = ColorRoad; this.highlighted = false; }
 }
