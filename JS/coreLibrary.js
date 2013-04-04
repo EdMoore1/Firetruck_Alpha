@@ -52,13 +52,22 @@ function GameCanvas() {
         arr.push(position+1+lineOffset);    //BotRight
 
         //Check the top and bot boundries
+        console.log("len: " + grid.length);
         for(i = 0; i < arr.length; i++) {
-            if ( arr[i] < 0 || arr[i] > grid.length ) {
+            if ( arr[i] < 0 || arr[i] > grid.length-1 ) {
                 delete arr[i];
             }
         }
 
         //Check the side boundries
+        for(i = 0; i < arr.length; i++) {
+            if ((position%lineOffset==lineOffset-1) && (arr[i]%lineOffset==0))
+                delete arr[i];
+            if ((position%lineOffset==0) && (arr[i]%lineOffset==lineOffset-1))
+                delete arr[i];
+        }
+
+        console.log(arr);
 
         return arr;
     };
@@ -149,8 +158,6 @@ function GameCanvas() {
         var fromStart = false;
         var i;
 
-        console.log(surround);
-
         //Check that the initial start location is the firestation
         for ( i in surround ) {
             if( grid[surround[i]].type === "FireStation") {
@@ -171,6 +178,12 @@ function GameCanvas() {
 
         //Check for a fire next to the cells (ie, Didn't skip over a solid block)
         var surround = GetSurroundings(CalculateIndex(e.pageX, e.pageY));
+
+        // for(i = 0; i < surround.length; i++) {
+        for (i in surround) {
+            grid[surround[i]].highlight();
+            grid[surround[i]].repaint(canvas);
+        }
 
     }, false);
 
