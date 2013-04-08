@@ -9,6 +9,7 @@ function GameCanvas() {
     var c = document.getElementById("game");
     var canvas = c.getContext("2d");
     var i, j;
+    var highlightedPath = new Array();
 
     //Core Variables
     var grid = Array( (GameCanvas.canvasHeight/GameCanvas.blockSize) * (GameCanvas.canvasWidth/GameCanvas.blockSize) );
@@ -28,7 +29,7 @@ function GameCanvas() {
     };
 
     GameCanvas.UnhightlightAll = function () {
-        for (i = 0; i < grid.length; i++) {
+        for (i = 0; i < grid.   gth; i++) {
             grid[i].unHighlight();
         }
         GameCanvas.repaint();
@@ -66,7 +67,7 @@ function GameCanvas() {
                 delete arr[i];
         }
 
-        console.log(arr);
+        // console.log(arr);
 
         return arr;
     };
@@ -143,12 +144,11 @@ function GameCanvas() {
         grid[Math.floor(Math.random() * grid.length)].burn();
     };
 
-
-
-
-
-
-
+    var sleep = function (ms) {
+        var dt = new Date();
+        dt.setTime(dt.getTime() + ms);
+        while ( new Date().getTime() < dt.getTime() ) {}
+    };
 
     c.addEventListener("mousedown", function (e) {
         var index = CalculateIndex(e.pageX, e.pageY);
@@ -178,11 +178,29 @@ function GameCanvas() {
         //Check for a fire next to the cells (ie, Didn't skip over a solid block)
         var surround = GetSurroundings(CalculateIndex(e.pageX, e.pageY));
 
-        // for(i = 0; i < surround.length; i++) {
+        /* 
+        //DEBUGGING
         for (i in surround) {
             grid[surround[i]].highlight();
             grid[surround[i]].repaint(canvas);
         }
+        */
+
+        //Blink
+        for(var j = 0; j < 7; j++) {
+            for(i in highlightedPath) {
+                if(j%2 == 0) {
+                    grid[highlightedPath[i]].unHighlight();
+                    console.log("Highlight");
+                }else{
+                    grid[highlightedPath[i]].highlight();
+                    console.log("Unhighlight");
+                }
+                grid[highlightedPath[i]].repaint(canvas);
+            }
+            sleep(100); //WHY THIS NO WORK
+        }
+
 
     }, false);
 
@@ -203,7 +221,9 @@ function GameCanvas() {
                 }
             }
 
-            if ( !grid[index].solid && count == 1 && (e.pageX-c.offsetLeft) != GameCanvas.canvasWidth+1 ) {
+            if ( !grid[index].solid && count == 1 && (e.pageX-c.offsetLeft) < GameCanvas.canvasWidth) {
+                if (highlightedPath.indexOf(index) == -1)
+                    highlightedPath.push(index);
                 grid[index].highlight();
                 grid[index].repaint(canvas);
             }
