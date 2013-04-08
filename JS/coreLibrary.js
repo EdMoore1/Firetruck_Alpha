@@ -52,7 +52,6 @@ function GameCanvas() {
         arr.push(position+1+lineOffset);    //BotRight
 
         //Check the top and bot boundries
-        console.log("len: " + grid.length);
         for(i = 0; i < arr.length; i++) {
             if ( arr[i] < 0 || arr[i] > grid.length-1 ) {
                 delete arr[i];
@@ -204,7 +203,7 @@ function GameCanvas() {
                 }
             }
 
-            if ( !grid[index].solid && count == 1 ) {
+            if ( !grid[index].solid && count == 1 && (e.pageX-c.offsetLeft) != GameCanvas.canvasWidth+1 ) {
                 grid[index].highlight();
                 grid[index].repaint(canvas);
             }
