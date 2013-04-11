@@ -10,6 +10,9 @@ function GameCanvas() {
     var canvas = c.getContext("2d");
     var i, j;
     var highlightedPath = new Array();
+    var time = 0;
+    var winCondition = false;
+    var level = 1;
 
     //Core Variables
     var grid = Array( (GameCanvas.canvasHeight/GameCanvas.blockSize) * (GameCanvas.canvasWidth/GameCanvas.blockSize) );
@@ -110,6 +113,21 @@ function GameCanvas() {
 
 
 
+    var timer = setInterval( function() {
+        time++;
+        var mins = Math.floor(time/60);
+        var secs = Math.floor(time%60);
+
+        //Clean up the time
+        if(secs < 10) 
+            secs = "0" + secs;
+
+
+        document.getElementById("timer").innerHTML = mins +":"+ secs;
+    }, 1000);
+
+
+
 
 
     //Methods (public)
@@ -130,6 +148,8 @@ function GameCanvas() {
         grid[1] = new FireStation(1);
         grid[GameCanvas.canvasWidth / GameCanvas.blockSize] = new FireStation( GameCanvas.canvasWidth / GameCanvas.blockSize );
         grid[GameCanvas.canvasWidth / GameCanvas.blockSize + 1] = new FireStation( GameCanvas.canvasWidth / GameCanvas.blockSize + 1 );
+
+        winCondition = true;
     };
 
     GameCanvas.prototype.repaint = function () { GameCanvas.repaint(); };
@@ -198,7 +218,9 @@ function GameCanvas() {
                 }
                 grid[highlightedPath[i]].repaint(canvas);
             }
-            sleep(100); //WHY THIS NO WORK
+            // window.setTimeout(sleep(100), 1); //WHY THIS NO WORK
+            sleep(100);
+
         }
 
 
