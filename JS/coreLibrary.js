@@ -32,7 +32,7 @@ function GameCanvas() {
     };
 
     GameCanvas.UnhightlightAll = function () {
-        for (i = 0; i < grid.   gth; i++) {
+        for (i = 0; i < grid.length; i++) {
             grid[i].unHighlight();
         }
         GameCanvas.repaint();
@@ -115,14 +115,31 @@ function GameCanvas() {
 
     var timer = setInterval( function() {
         time++;
+        var i;
+
+        //Evaluate burn conditions
+        //May need optimisation
+        for(i in grid) {
+            if (grid[i].onFire) {
+                var sur = GetSurroundings(grid[i].ID);
+                for(j in sur) {
+                    if( grid[sur[j]].flammable != 0 && Math.random() < grid[sur[j]].flammable ){
+                        grid[sur[j]].burn();
+                        grid[sur[j]].repaint(canvas);
+                    }   
+                }
+            }
+        }
+
+
+
+        //Increment the timer
         var mins = Math.floor(time/60);
         var secs = Math.floor(time%60);
 
         //Clean up the time
         if(secs < 10) 
             secs = "0" + secs;
-
-
         document.getElementById("timer").innerHTML = mins +":"+ secs;
     }, 1000);
 
@@ -148,6 +165,8 @@ function GameCanvas() {
         grid[1] = new FireStation(1);
         grid[GameCanvas.canvasWidth / GameCanvas.blockSize] = new FireStation( GameCanvas.canvasWidth / GameCanvas.blockSize );
         grid[GameCanvas.canvasWidth / GameCanvas.blockSize + 1] = new FireStation( GameCanvas.canvasWidth / GameCanvas.blockSize + 1 );
+
+        grid[Math.floor(Math.random() * grid.length) + 1].burn();
 
         winCondition = true;
     };

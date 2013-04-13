@@ -10,6 +10,7 @@ var ColorRubble = "rgb(77,74,74)";
 var ColorFireStation = "rgb(213,25,25)";
 var ColorRoad = "rgb(157,157,147)";
 var ColorHighlighted = 'rgb(61,255,73)';
+var ColorFire = 'rgb(255,102,000)';
 
 
 
@@ -38,7 +39,7 @@ function Building(position, height, flammable, time) {
 			this.health--; 
 		}
 	}
-	this.update  = function()
+	this.update = function()
 	{
 		if(this.onFire && this.health == 0)
 		{
@@ -77,7 +78,7 @@ function Building(position, height, flammable, time) {
 
 function Grass(position) {
 	this.ID = position;
-	this.flammable = 1;
+	this.flammable = 0.20;
 	this.sprite = SPRITE_GRASS_ARRAY[Math.floor(Math.random() * SPRITE_GRASS_ARRAY.length)];
 	this.onFire = false;
 	this.color = ColorGrass;
@@ -118,6 +119,7 @@ function FireStation(position) {
 		canvas.fillRect(this.x, this.y, GameCanvas.blockSize, GameCanvas.blockSize);
 	}
 
+	FireStation.prototype.burn = function () { }
 	FireStation.prototype.highlight = function () { this.color = ColorHighlighted; this.highlighted = true; }
 	FireStation.prototype.unHighlight = function () { this.color = ColorFireStation; this.highlighted = false; }
 }
@@ -130,6 +132,7 @@ function EmptyBlock(position) {
 	this.type = "EmptyBlock";
 	this.highlighted = false;
 
+	EmptyBlock.prototype.burn = function () { }
 	EmptyBlock.prototype.repaint = function( canvas ) { /* Do Nothing */ this.highlighted = true; };
 	EmptyBlock.prototype.unHighlight = function() { /* Do Nothing */ this.highlighted = false; }
 }
@@ -154,6 +157,7 @@ function Road(position) {
 		canvas.fillRect(this.x, this.y, GameCanvas.blockSize, GameCanvas.blockSize);
 	}
 
+	Road.prototype.burn = function () { }
 	Road.prototype.highlight = function () { this.color = ColorHighlighted; this.highlighted = true; }
 	Road.prototype.unHighlight = function () { this.color = ColorRoad; this.highlighted = false; }
 }
