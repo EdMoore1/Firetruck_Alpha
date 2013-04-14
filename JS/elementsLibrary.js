@@ -78,7 +78,7 @@ function Building(position, height, flammable, time) {
 
 function Grass(position) {
 	this.ID = position;
-	this.flammable = 0.20;
+	this.flammable = 0.01;
 	this.sprite = SPRITE_GRASS_ARRAY[Math.floor(Math.random() * SPRITE_GRASS_ARRAY.length)];
 	this.onFire = false;
 	this.color = ColorGrass;

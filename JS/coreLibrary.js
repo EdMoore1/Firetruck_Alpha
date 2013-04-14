@@ -86,10 +86,19 @@ function GameCanvas() {
 
         arr.push(position-0+lineOffset);    //Bottom
 
+        //Check the top and bot boundries
         for(i = 0; i < arr.length; i++) {
-            if ( arr[i] < 0 || arr[i] > lineOffset*lineOffset ) {
+            if ( arr[i] < 0 || arr[i] > grid.length-1 ) {
                 delete arr[i];
             }
+        }
+
+        //Check the side boundries
+        for(i = 0; i < arr.length; i++) {
+            if ((position%lineOffset==lineOffset-1) && (arr[i]%lineOffset==0))
+                delete arr[i];
+            if ((position%lineOffset==0) && (arr[i]%lineOffset==lineOffset-1))
+                delete arr[i];
         }
 
         return arr;
@@ -116,19 +125,26 @@ function GameCanvas() {
     var timer = setInterval( function() {
         time++;
         var i;
+        var toBurn = Array();
+        
 
         //Evaluate burn conditions
         //May need optimisation
         for(i in grid) {
             if (grid[i].onFire) {
-                var sur = GetSurroundings(grid[i].ID);
+                var sur = GetDirectSurroundings(grid[i].ID);
                 for(j in sur) {
                     if( grid[sur[j]].flammable != 0 && Math.random() < grid[sur[j]].flammable ){
-                        grid[sur[j]].burn();
-                        grid[sur[j]].repaint(canvas);
+                        toBurn.push(sur[j]);
                     }   
                 }
             }
+        }
+
+        //Burn the tiles required
+        for(i in toBurn) {
+            grid[toBurn[i]].burn();
+            grid[toBurn[i]].repaint(canvas);
         }
 
 
@@ -195,6 +211,7 @@ function GameCanvas() {
         var surround = GetSurroundings(index);
         var fromStart = false;
         var i;
+        highlightedPath = new Array();
 
         //Check that the initial start location is the firestation
         for ( i in surround ) {
@@ -230,16 +247,14 @@ function GameCanvas() {
             for(i in highlightedPath) {
                 if(j%2 == 0) {
                     grid[highlightedPath[i]].unHighlight();
-                    console.log("Highlight");
+                    console.log("Unhighlight");
                 }else{
                     grid[highlightedPath[i]].highlight();
-                    console.log("Unhighlight");
+                    console.log("Highlight");
                 }
                 grid[highlightedPath[i]].repaint(canvas);
             }
-            // window.setTimeout(sleep(100), 1); //WHY THIS NO WORK
             sleep(100);
-
         }
 
 
@@ -262,7 +277,7 @@ function GameCanvas() {
                 }
             }
 
-            if ( !grid[index].solid && count == 1 && (e.pageX-c.offsetLeft) < GameCanvas.canvasWidth) {
+            if ( !grid[index].solid && !grid[index].onFire && count == 1 && (e.pageX-c.offsetLeft) < GameCanvas.canvasWidth) {
                 if (highlightedPath.indexOf(index) == -1)
                     highlightedPath.push(index);
                 grid[index].highlight();
