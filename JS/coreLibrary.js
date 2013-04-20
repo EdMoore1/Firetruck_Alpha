@@ -13,9 +13,10 @@ function GameCanvas() {
     var time = 0;
     var winCondition = false;
     var level = 1;
+    var initLevel = Array( (GameCanvas.canvasHeight/GameCanvas.blockSize) * (GameCanvas.canvasWidth/GameCanvas.blockSize) );
 
     //Core Variables
-    var grid = Array( (GameCanvas.canvasHeight/GameCanvas.blockSize) * (GameCanvas.canvasWidth/GameCanvas.blockSize) );
+    var grid = initLevel.slice(0);
 
     var dragging = false;
 
@@ -120,8 +121,6 @@ function GameCanvas() {
         return false;
     };
 
-
-
     var timer = setInterval( function() {
         time++;
         var i;
@@ -159,28 +158,33 @@ function GameCanvas() {
         document.getElementById("timer").innerHTML = mins +":"+ secs;
     }, 1000);
 
-
+    var intToBlock = function (i, pos) {
+        switch(i) {
+            case(0): return new Grass(pos);
+            case(1): return new Road(pos);
+            case(2): return new Building(pos);
+            case(3): return new FireStation(pos);
+            case(4): return new GasStation(pos);
+            case(5): return new River(pos);
+            case(6): return new Traffic(pos);
+            default:
+                throw new Error("CRITICAL: Unable to match int to BlockType (" + i +")");
+                return null;   //Will throw error
+        }
+    }
 
 
 
     //Methods (public)
     GameCanvas.prototype.restart = function () {
-        for (i = 0; i < grid.length; i++) {
-            if (Math.floor((Math.random() * 10) + 1) === 1) {
-                grid[i] = new Building(i, 1, 1, 30);
-            } else if (Math.floor((Math.random() * 4) + 1) === 1) {
-                grid[i] = new Road(i);
-            } else {
-                grid[i] = new Grass(i);
-            }
-        }
+        this.start(initLevel);
+    };
 
+    GameCanvas.prototype.start = function (levelArr) {
+        initLevel = levelArr.slice(0);
 
-        //Put the firestation in the top left corner
-        grid[0] = new FireStation(0);
-        grid[1] = new FireStation(1);
-        grid[GameCanvas.canvasWidth / GameCanvas.blockSize] = new FireStation( GameCanvas.canvasWidth / GameCanvas.blockSize );
-        grid[GameCanvas.canvasWidth / GameCanvas.blockSize + 1] = new FireStation( GameCanvas.canvasWidth / GameCanvas.blockSize + 1 );
+        for(var i = 0; i < levelArr.length; i++)
+            grid[i] = intToBlock(levelArr[i], i);
 
         grid[Math.floor(Math.random() * grid.length) + 1].burn();
 
