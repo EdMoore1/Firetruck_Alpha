@@ -2,9 +2,11 @@
 var SPRITE_BUILDING_ARRAY = ["sprites/building001.gif"];
 var SPRITE_GRASS_ARRAY = ["sprites/grass001.gif"];
 var SPRITE_FIRESTATION_ARRAY = ["sprites/firstStation001.gif"];
+var SPRITE_GASSTATION_ARRAY = ["sprites/gasStation001.gif"];
 
 //Colors
 var ColorBuilding = "rgb(25,184,212)";
+var ColorGasStation = "rgb(251,184,41)";
 var ColorGrass = "rgb(1,142,14)";
 var ColorRubble = "rgb(77,74,74)";
 var ColorFireStation = "rgb(213,25,25)";
@@ -73,8 +75,6 @@ function Building(position, height, flammable, time) {
 		canvas.fillRect(this.x, this.y, GameCanvas.blockSize, GameCanvas.blockSize);	
 	}
 }
-
-
 
 function Grass(position) {
 	this.ID = position;
@@ -160,4 +160,66 @@ function Road(position) {
 	Road.prototype.burn = function () { }
 	Road.prototype.highlight = function () { this.color = ColorHighlighted; this.highlighted = true; }
 	Road.prototype.unHighlight = function () { this.color = ColorRoad; this.highlighted = false; }
+}
+
+
+
+function GasStation(position, height) {
+    this.ID = position;
+    this.height = height;
+    this.flammable = 30;
+    this.time = 120;
+    this.sprite = SPRITE_GASSTATION_ARRAY[Math.floor(Math.random() * SPRITE_GASSTATION_ARRAY.length)];
+    this.onFire = false;
+    this.timeLeft = this.time;
+    this.health = 5;
+    this.color = ColorGasStation;
+    this.solid = true;
+    this.x = Math.floor( (position*GameCanvas.blockSize)%(GameCanvas.canvasWidth) );
+    this.y = ( Math.floor((position*GameCanvas.blockSize)/(GameCanvas.canvasWidth))*GameCanvas.blockSize );
+    this.type = "GasStation";
+    this.highlighted = false;
+
+    this.height = function() { return height; }
+    this.spray = function()
+    {
+        if(this.onFire)
+        {
+            this.timeLeft--;
+            this.health--; 
+        }
+    }
+    this.update = function()
+    {
+        if(this.onFire && this.health == 0)
+        {
+            //change sprite to burnt down
+            this.color = ColorRubble;
+
+            //change flammable to 0
+            this.flammable = true;
+
+            //change onFire to 0
+            this.onFire = false;
+
+            //change height to 0
+            this.height = 0;
+        }
+        else if(this.onFire && this.timeLeft == 0)
+        {
+            //change sprite to not on fire
+            this.onFire = false;
+
+            //change onFire to 0
+            this.sprite = GasStationColor;
+        }
+    }
+
+    GasStation.prototype.burn = function () { this.color = ColorFire; this.onFire = true; }
+    GasStation.prototype.highlight = function () { this.highlighted = true; }
+    GasStation.prototype.unHighlight = function () { this.color = ColorGasStation; this.highlighted = false; }
+    GasStation.prototype.repaint = function(canvas) { 
+        canvas.fillStyle = this.color;
+        canvas.fillRect(this.x, this.y, GameCanvas.blockSize, GameCanvas.blockSize);    
+    }
 }

@@ -14,6 +14,7 @@ function GameCanvas() {
     var winCondition = false;
     var level = 1;
     var initLevel = Array( (GameCanvas.canvasHeight/GameCanvas.blockSize) * (GameCanvas.canvasWidth/GameCanvas.blockSize) );
+    var lastDragged;
 
     //Core Variables
     var grid = initLevel.slice(0);
@@ -234,6 +235,9 @@ function GameCanvas() {
         dragging = false;
         var count = 0;
         var i;
+        var fireCount = 0;
+
+        lastDragged = null;
 
         //Check for a fire next to the cells (ie, Didn't skip over a solid block)
         var surround = GetSurroundings(CalculateIndex(e.pageX, e.pageY));
@@ -261,6 +265,15 @@ function GameCanvas() {
             sleep(100);
         }
 
+        //Check for a fire in the surroundings
+        for(i in surround)
+            if(grid[surround[i]].onFire)
+                fireCount++;
+
+        if(fireCount>0) {
+            //Create fire truck
+        }
+
 
     }, false);
 
@@ -275,15 +288,20 @@ function GameCanvas() {
             var i;
             var count = 0;
 
+
             for ( i in surround ) {
                 if (grid[surround[i]].highlighted || grid[surround[i]].type === "FireStation") {
                     count++;
                 }
             }
 
-            if ( !grid[index].solid && !grid[index].onFire && count == 1 && (e.pageX-c.offsetLeft) < GameCanvas.canvasWidth) {
-                if (highlightedPath.indexOf(index) == -1)
+
+            if ( !grid[index].solid && !grid[index].onFire && (e.pageX-c.offsetLeft) < GameCanvas.canvasWidth &&
+                 (lastDragged == null || inArray(lastDragged, surround)) ) {
+                if (highlightedPath.indexOf(index) == -1) {
                     highlightedPath.push(index);
+                    lastDragged = index;
+                }   
                 grid[index].highlight();
                 grid[index].repaint(canvas);
             }
