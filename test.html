@@ -2,8 +2,8 @@
 	<head>
 		<title>Test Canvas</title>
 		<meta name="viewport" content="initial-scale=1,user-scalable=no,maximum-scale=1">
-		<script src="JS/coreLibrary.js" type="text/javascript"></script>
 		<script src="JS/elementsLibrary.js" type="text/javascript"></script>
+		<script src="JS/firetruckLibrary.js" type="text/javascript"></script>
 		<script src="JS/coreLibrary.js" type="text/javascript"></script>
 		<script src="JS/levels.js" type="text/javascript"></script>
 		<style type="text/css">
@@ -14,7 +14,7 @@
 		<script type="text/javascript">
 			window.onload = function () {
 				var game = new GameCanvas();
-				game.start(level0);
+				game.start(level0, 1);
 				game.repaint();
 			}
 		</script>

@@ -12,9 +12,10 @@ function GameCanvas() {
     var highlightedPath = new Array();
     var time = 0;
     var winCondition = false;
-    var level = 1;
     var initLevel = Array( (GameCanvas.canvasHeight/GameCanvas.blockSize) * (GameCanvas.canvasWidth/GameCanvas.blockSize) );
     var lastDragged;
+    var maxTrucks = 1;
+    var trucks = Array();
 
     //Core Variables
     var grid = initLevel.slice(0);
@@ -141,6 +142,12 @@ function GameCanvas() {
             }
         }
 
+        for(i in trucks) {
+            trucks[i].Move();
+            trucks[i].Repaint(canvas);
+            grid[trucks[i].Pos].repaint(canvas);
+        }
+
         //Burn the tiles required
         for(i in toBurn) {
             grid[toBurn[i]].burn();
@@ -181,8 +188,9 @@ function GameCanvas() {
         this.start(initLevel);
     };
 
-    GameCanvas.prototype.start = function (levelArr) {
+    GameCanvas.prototype.start = function (levelArr, trucks) {
         initLevel = levelArr.slice(0);
+        maxTrucks = trucks;
 
         for(var i = 0; i < levelArr.length; i++)
             grid[i] = intToBlock(levelArr[i], i);
@@ -272,6 +280,11 @@ function GameCanvas() {
 
         if(fireCount>0) {
             //Create fire truck
+            if(trucks.length < maxTrucks) {
+                console.log('Sending Truck');
+                trucks.push(new FireTruck(highlightedPath));
+                highlightedPath = Array();
+            }
         }
 
 

@@ -16,14 +16,14 @@ var ColorFire = 'rgb(255,102,000)';
 
 
 
-function Building(position, height, flammable, time) {
+function Building(position) {
 	this.ID = position;
-	this.height = height;
-	this.flammable = flammable;
-	this.time = time;
+	this.height = Math.floor(Math.random() * 60) + 1;
+	this.flammable = Math.random() * 0.10 + 0.01;
+	this.time = this.flammable * this.height * 30;
 	this.sprite = SPRITE_BUILDING_ARRAY[Math.floor(Math.random() * SPRITE_BUILDING_ARRAY.length)];
 	this.onFire = false;
-	this.timeLeft = time;
+	this.timeLeft = this.time;
 	this.health = 30;
 	this.color = ColorBuilding;
 	this.solid = true;
@@ -36,10 +36,7 @@ function Building(position, height, flammable, time) {
 	this.spray = function()
 	{
 		if(this.onFire)
-		{
 			this.timeLeft--;
-			this.health--; 
-		}
 	}
 	this.update = function()
 	{
@@ -65,6 +62,8 @@ function Building(position, height, flammable, time) {
 			//change onFire to 0
 			this.sprite = BuildingColor;
 		}
+
+		if(this.onFire) this.health--;
 	}
 
 	Building.prototype.burn = function () { this.color = ColorFire; this.onFire = true; }
@@ -78,7 +77,7 @@ function Building(position, height, flammable, time) {
 
 function Grass(position) {
 	this.ID = position;
-	this.flammable = 0.01;
+	this.flammable = 0.03;
 	this.sprite = SPRITE_GRASS_ARRAY[Math.floor(Math.random() * SPRITE_GRASS_ARRAY.length)];
 	this.onFire = false;
 	this.color = ColorGrass;
@@ -89,8 +88,7 @@ function Grass(position) {
 	this.highlighted = false;
 
 	this.update = function() {
-		//Evaluate if to catch on fire
-
+		if(this.onFire) this.health--;
 	}
 
 	Grass.prototype.burn = function () { this.color = ColorFire; this.onFire = true; }
@@ -119,7 +117,7 @@ function FireStation(position) {
 		canvas.fillRect(this.x, this.y, GameCanvas.blockSize, GameCanvas.blockSize);
 	}
 
-	FireStation.prototype.burn = function () { }
+	FireStation.prototype.burn = function () { this.color = ColorFire; this.onFire = true; }
 	FireStation.prototype.highlight = function () { this.color = ColorHighlighted; this.highlighted = true; }
 	FireStation.prototype.unHighlight = function () { this.color = ColorFireStation; this.highlighted = false; }
 }
