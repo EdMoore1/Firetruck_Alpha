@@ -45,6 +45,17 @@ function FireTruck(Path) {
 
     };
 
+    FireTruck.prototype.Last = function() {
+
+        if(this.Pos == this.Path)
+            return null;
+
+        for(var i in this.Path) {
+            if(this.Path[i] == this.Pos)
+                return this.Path[i-1];
+        }
+    }
+
 
     FireTruck.prototype.Repaint = function(canvas) {
         var x = Math.floor( (this.Pos*GameCanvas.blockSize)%(GameCanvas.canvasWidth) );

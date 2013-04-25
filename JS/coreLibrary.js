@@ -145,7 +145,7 @@ function GameCanvas() {
         for(i in trucks) {
             trucks[i].Move();
             trucks[i].Repaint(canvas);
-            grid[trucks[i].Pos].repaint(canvas);
+            grid[trucks[i].Last()].repaint(canvas);
         }
 
         //Burn the tiles required

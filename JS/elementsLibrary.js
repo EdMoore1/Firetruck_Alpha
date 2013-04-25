@@ -12,6 +12,7 @@ var ColorRubble = "rgb(77,74,74)";
 var ColorFireStation = "rgb(213,25,25)";
 var ColorRoad = "rgb(157,157,147)";
 var ColorHighlighted = 'rgb(61,255,73)';
+var ColorHighlighted = 'rgb(255,255,51)';
 var ColorFire = 'rgb(255,102,000)';
 
 
