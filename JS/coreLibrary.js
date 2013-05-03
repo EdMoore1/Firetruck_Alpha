@@ -162,6 +162,7 @@ function GameCanvas() {
                 delete arr[i];
             if ((position%lineOffset==0) && (arr[i]%lineOffset==lineOffset-1))
                 delete arr[i];
+            //TODO: Compensate for overflow
         }
 
         // console.log(arr);
