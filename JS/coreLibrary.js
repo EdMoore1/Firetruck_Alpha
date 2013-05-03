@@ -17,6 +17,7 @@ function GameCanvas() {
 
     //Core Variables
     var grid = initLevel.slice(0);
+    var DIST_SCALAR = 5;
 
     var dragging = false;
 
@@ -105,6 +106,70 @@ function GameCanvas() {
         return arr;
     };
 
+
+    var GetFurtherSurroundings = function (position) {
+        var arr = [];
+        var lineOffset = (GameCanvas.canvasWidth/GameCanvas.blockSize);
+
+        /*
+            0 1 2 3 4
+            5 6 7 8 9
+            0 1 * 2 3
+            4 5 6 7 8
+            9 0 1 2 3
+        */
+
+        arr.push(position-2-lineOffset*2);  //0
+        arr.push(position-1-lineOffset*2);  //1
+        arr.push(position-0-lineOffset*2);  //2
+        arr.push(position+1-lineOffset*2);  //3
+        arr.push(position+2-lineOffset*2);  //4
+
+        arr.push(position-2-lineOffset*1);  //5
+        arr.push(position-1-lineOffset*1);  //6
+        arr.push(position-0-lineOffset*1);  //7
+        arr.push(position+1-lineOffset*1);  //8
+        arr.push(position+2-lineOffset*1);  //9
+
+        arr.push(position-2-lineOffset*0);  //0
+        arr.push(position-1-lineOffset*0);  //1
+                        /**/
+        arr.push(position+1-lineOffset*0);  //2
+        arr.push(position+2-lineOffset*0);  //3
+
+        arr.push(position-2+lineOffset*1);  //4
+        arr.push(position-1+lineOffset*1);  //5
+        arr.push(position-0+lineOffset*1);  //6
+        arr.push(position+1+lineOffset*1);  //7
+        arr.push(position+2+lineOffset*1);  //8
+
+        arr.push(position-2+lineOffset*2);  //9
+        arr.push(position-1+lineOffset*2);  //0
+        arr.push(position-0+lineOffset*2);  //1
+        arr.push(position+1+lineOffset*2);  //2
+        arr.push(position+2+lineOffset*2);  //3
+
+        //Check the top and bot boundries
+        for(i = 0; i < arr.length; i++) {
+            if ( arr[i] < 0 || arr[i] > grid.length-1 ) {
+                delete arr[i];
+            }
+        }
+
+        //Check the side boundries
+        for(i = 0; i < arr.length; i++) {
+            if ((position%lineOffset==lineOffset-1) && (arr[i]%lineOffset==0))
+                delete arr[i];
+            if ((position%lineOffset==0) && (arr[i]%lineOffset==lineOffset-1))
+                delete arr[i];
+        }
+
+        // console.log(arr);
+
+        return arr;
+    };
+
+
     var inArray = function (needle, haystack) {
         if ( needle.constructor !== Array) {
             needle = [needle];
@@ -132,9 +197,9 @@ function GameCanvas() {
         //May need optimisation
         for(i in grid) {
             if (grid[i].onFire) {
-                var sur = GetDirectSurroundings(grid[i].ID);
+                var sur = GetFurtherSurroundings(grid[i].ID);
                 for(j in sur)
-                    if( grid[sur[j]].flammable != 0 && Math.random() < grid[sur[j]].flammable )
+                    if( grid[sur[j]].flammable != 0 && Math.random() < (grid[sur[j]].flammable/DIST_SCALAR) )
                         toBurn.push(sur[j]);
         } }
 

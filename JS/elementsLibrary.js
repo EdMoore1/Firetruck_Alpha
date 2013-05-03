@@ -102,7 +102,7 @@ function Grass() {
 		this.className = "grass";
 		this.color = ColorGrass;
 		this.height = 0;
-		this.flammable = Math.random() * 0.05 + 0.01;
+		this.flammable = Math.random() * 0.04 + 0.01;
 		this.sprite = "";
 	}
 }
