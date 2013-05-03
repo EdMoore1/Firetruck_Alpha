@@ -7,54 +7,38 @@ function FireTruck(Path) {
     this.color = 'rgb(0,0,0)';
     this.Pos = Path[0];
 
-
-
-
     FireTruck.prototype.Move = function() {
-        //Declarations
-        var found = false
+        var found = false;
 
         //Don't move if you don't need to
         if(this.Stopped) return;
         
         //Find where we are
         for(var i in this.Path) {
-            if(this.Path[i] == this.Pos)
+
+            if(this.Path[i] == this.Pos && !found) {
                 found = true;
-            else if(found) {
+            }else if(found) {
                 this.Pos = this.Path[i];
-                found = false;
-            }
+                return;
+            }else{ }
         }
 
-        //If couldn't move to the next tile (No next tile)
-        if(found) Stopped = true;
-    };
-
-
-
-    FireTruck.prototype.Spray = function() {
-        //Find the target
-        var sur = GetDirectSurroundings(Pos);
-
-        console.log(sur);
-
-        //TODO: Change the icon to show where it's spraying
-
-        //Decrease the timer for the target
-
+        if(found == true) this.Stopped = true;
     };
 
     FireTruck.prototype.last = function() {
 
         if(this.Pos == this.Path)
             return null;
+        if(this.Stopped == true)
+            return this.Pos;
 
         for(var i in this.Path) {
             if(this.Path[i] == this.Pos)
                 return this.Path[i-1];
         }
-    }
+    };
 
 
     FireTruck.prototype.Repaint = function(canvas) {

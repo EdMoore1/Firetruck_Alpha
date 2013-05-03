@@ -123,7 +123,8 @@ function GameCanvas() {
 
     var timer = setInterval( function() {
         time++;
-        var i;
+        var i, j;
+        var foundTarget = false;
         var toBurn = Array();
         
 
@@ -132,19 +133,33 @@ function GameCanvas() {
         for(i in grid) {
             if (grid[i].onFire) {
                 var sur = GetDirectSurroundings(grid[i].ID);
-                for(j in sur) {
-                    if( grid[sur[j]].flammable != 0 && Math.random() < grid[sur[j]].flammable ){
+                for(j in sur)
+                    if( grid[sur[j]].flammable != 0 && Math.random() < grid[sur[j]].flammable )
                         toBurn.push(sur[j]);
-                    }   
-                }
-            }
+        } }
+
+        //Update all the tiles
+        for(i in grid) {
+            grid[i].update();
+            grid[i].repaint(canvas);
         }
 
+        //Truck operations
         for(i in trucks) {
-            trucks[i].Move();
-            trucks[i].Repaint(canvas);
-            if(trucks[i].last() != null)
-                grid[trucks[i].last()].repaint(canvas);
+            if( trucks[i].Stopped == true ) {
+                trucks[i].Repaint(canvas);
+                var sur = GetSurroundings(trucks[i].last());
+                for(j in sur)
+                    if(!foundTarget && grid[sur[j]].onFire) {
+                        foundTarget = true;
+                        grid[sur[j]].sprayed();
+                    }
+            }else{
+                trucks[i].Move();
+                trucks[i].Repaint(canvas);
+                if(trucks[i].last() != null)
+                    grid[trucks[i].last()].repaint(canvas);
+            }
         }
 
         //Burn the tiles required
@@ -152,7 +167,6 @@ function GameCanvas() {
             grid[toBurn[i]].burn();
             grid[toBurn[i]].repaint(canvas);
         }
-
 
 
         //Increment the timer
