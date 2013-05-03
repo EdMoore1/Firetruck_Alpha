@@ -1,5 +1,3 @@
-/*global Building, Road, Grass, FireStation, EmptyBlock */
-
 function GameCanvas() {
     //CONFIG Settings
     "use strict";
@@ -145,7 +143,8 @@ function GameCanvas() {
         for(i in trucks) {
             trucks[i].Move();
             trucks[i].Repaint(canvas);
-            grid[trucks[i].Last()].repaint(canvas);
+            if(trucks[i].last() != null)
+                grid[trucks[i].last()].repaint(canvas);
         }
 
         //Burn the tiles required
@@ -192,8 +191,10 @@ function GameCanvas() {
         initLevel = levelArr.slice(0);
         maxTrucks = trucks;
 
-        for(var i = 0; i < levelArr.length; i++)
+        for(var i = 0; i < levelArr.length; i++) {
             grid[i] = intToBlock(levelArr[i], i);
+            grid[i].init(i);
+        }
 
         grid[Math.floor(Math.random() * grid.length) + 1].burn();
 
@@ -228,7 +229,7 @@ function GameCanvas() {
 
         //Check that the initial start location is the firestation
         for ( i in surround ) {
-            if( grid[surround[i]].type === "FireStation") {
+            if( grid[surround[i]].className === "firestation") {
                 fromStart = true;
             }
         }
@@ -249,14 +250,6 @@ function GameCanvas() {
 
         //Check for a fire next to the cells (ie, Didn't skip over a solid block)
         var surround = GetSurroundings(CalculateIndex(e.pageX, e.pageY));
-
-        /* 
-        //DEBUGGING
-        for (i in surround) {
-            grid[surround[i]].highlight();
-            grid[surround[i]].repaint(canvas);
-        }
-        */
 
         //Blink
         for(var j = 0; j < 7; j++) {
@@ -303,13 +296,13 @@ function GameCanvas() {
 
 
             for ( i in surround ) {
-                if (grid[surround[i]].highlighted || grid[surround[i]].type === "FireStation") {
+                if (grid[surround[i]].highlighted || grid[surround[i]].className === "FireStation") {
                     count++;
                 }
             }
 
 
-            if ( !grid[index].solid && !grid[index].onFire && (e.pageX-c.offsetLeft) < GameCanvas.canvasWidth &&
+            if ( !(grid[index].height > 0) && !grid[index].onFire && (e.pageX-c.offsetLeft) < GameCanvas.canvasWidth &&
                  (lastDragged == null || inArray(lastDragged, surround)) ) {
                 if (highlightedPath.indexOf(index) == -1) {
                     highlightedPath.push(index);

@@ -45,7 +45,7 @@ function FireTruck(Path) {
 
     };
 
-    FireTruck.prototype.Last = function() {
+    FireTruck.prototype.last = function() {
 
         if(this.Pos == this.Path)
             return null;
