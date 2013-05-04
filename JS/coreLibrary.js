@@ -14,6 +14,7 @@ function GameCanvas() {
     var lastDragged;
     var maxTrucks = 1;
     var trucks = Array();
+    var truckNo = -1;
 
     //Core Variables
     var grid = initLevel.slice(0);
@@ -71,8 +72,6 @@ function GameCanvas() {
             if ((position%lineOffset==0) && (arr[i]%lineOffset==lineOffset-1))
                 delete arr[i];
         }
-
-        // console.log(arr);
 
         return arr;
     };
@@ -165,8 +164,6 @@ function GameCanvas() {
             //TODO: Compensate for overflow
         }
 
-        // console.log(arr);
-
         return arr;
     };
 
@@ -227,6 +224,12 @@ function GameCanvas() {
                     grid[trucks[i].last()].repaint(canvas);
             }
         }
+
+        //Dont burn tiles that a truck is on
+        for(i in trucks)
+            for(j in toBurn)
+                if(trucks[i].Pos == toBurn[j])
+                    delete toBurn[j];
 
         //Burn the tiles required
         for(i in toBurn) {
@@ -304,18 +307,23 @@ function GameCanvas() {
         var lineOffset = (GameCanvas.canvasWidth/GameCanvas.blockSize);
         var surround = GetSurroundings(index);
         var fromStart = false;
+        truckNo = -1;
         var i;
         highlightedPath = new Array();
 
         //Check that the initial start location is the firestation
         for ( i in surround ) {
-            if( grid[surround[i]].className === "firestation") {
+            if( grid[surround[i]].className === "firestation" ) {
                 fromStart = true;
             }
+
+            for( j in trucks )
+                if( trucks[j].Pos == surround[i] && truckNo == -1)
+                    truckNo = j;
         }
 
         //Initialise the dragging code, After this the dragging code takes care of the highlighting
-        if (fromStart) { dragging = true; }
+        if (fromStart || truckNo > -1) { dragging = true; }
     }, false);
 
 
@@ -331,15 +339,13 @@ function GameCanvas() {
         //Check for a fire next to the cells (ie, Didn't skip over a solid block)
         var surround = GetSurroundings(CalculateIndex(e.pageX, e.pageY));
 
-        //Blink
-        for(var j = 0; j < 7; j++) {
+        //TODO: Write blink code
+        for(var j = 0; j < 1; j++) {
             for(i in highlightedPath) {
                 if(j%2 == 0) {
                     grid[highlightedPath[i]].unHighlight();
-                    console.log("Unhighlight");
                 }else{
                     grid[highlightedPath[i]].highlight();
-                    console.log("Highlight");
                 }
                 grid[highlightedPath[i]].repaint(canvas);
             }
@@ -352,9 +358,11 @@ function GameCanvas() {
                 fireCount++;
 
         if(fireCount>0) {
-            //Create fire truck
-            if(trucks.length < maxTrucks) {
-                console.log('Sending Truck');
+            //Move or Create fire truck
+            if(truckNo > -1) {
+                trucks[truckNo].setPath(highlightedPath);
+                highlightedPath = Array();
+            }else if(trucks.length < maxTrucks) {
                 trucks.push(new FireTruck(highlightedPath));
                 highlightedPath = Array();
             }

@@ -40,6 +40,20 @@ function FireTruck(Path) {
         }
     };
 
+    FireTruck.prototype.setPath = function(newPath) {
+        var i;
+
+        //Start at current position
+        this.Path = Array();
+        this.Path.push(this.Pos);
+
+        //Push the rest of the array
+        for ( i in newPath )
+            this.Path.push(newPath[i]);
+
+        this.Stopped = false;
+    };
+
 
     FireTruck.prototype.Repaint = function(canvas) {
         var x = Math.floor( (this.Pos*GameCanvas.blockSize)%(GameCanvas.canvasWidth) );

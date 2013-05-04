@@ -5,7 +5,8 @@ var SPRITE_FIRESTATION_ARRAY = ["sprites/firstStation001.gif"];
 var SPRITE_GASSTATION_ARRAY = ["sprites/gasStation001.gif"];
 
 //Colors
-var ColorBuilding = "rgb(25,184,212)";
+var ColorWater = "rgb(25,184,212)";
+var ColorBuilding = "rgb(95,158,160)";
 var ColorGasStation = "rgb(251,184,41)";
 var ColorGrass = "rgb(1,142,14)";
 var ColorRubble = "rgb(77,74,74)";
@@ -91,8 +92,8 @@ function Building() {
 	this.typeInit = function() {
 		this.className = "building";
 		this.color = ColorBuilding;
-		this.height = Math.floor(Math.random() * 60) + 1;
-		this.flammable = Math.random() * 0.10 + 0.01;
+		this.height = Math.floor(Math.random() * 10) + 1;
+		this.flammable = Math.random() * 0.05 + 0.01;
 		this.sprite = "";
 	}
 }
@@ -102,7 +103,7 @@ function Grass() {
 		this.className = "grass";
 		this.color = ColorGrass;
 		this.height = 0;
-		this.flammable = Math.random() * 0.04 + 0.01;
+		this.flammable = Math.random() * 0.02 + 0.01;
 		this.sprite = "";
 	}
 }
