@@ -18,6 +18,7 @@ var ColorFire = 'rgb(255,102,000)';
 
 //CONFIG
 var TimeScalar = 30;
+var Debugging = true;
 
 
 function Element(position) {
@@ -82,8 +83,22 @@ Element.prototype.burn = function () {
 Element.prototype.highlight = function () { this.highlighted = true; this.color = ColorHighlighted; }
 Element.prototype.unHighlight = function () { this.color = this.originalColor; this.highlighted = false; }
 Element.prototype.repaint = function(canvas) {
-	canvas.fillStyle = this.color;
+	// canvas.fillStyle = this.color;
+	// canvas.fillRect(this.x, this.y, GameCanvas.blockSize, GameCanvas.blockSize);	
+
+
+
+
+	//Debugging
+	canvas.fillStyle = "rgb(0,0,0);";
 	canvas.fillRect(this.x, this.y, GameCanvas.blockSize, GameCanvas.blockSize);	
+	
+	canvas.fillStyle = this.color;
+	canvas.fillRect(this.x+1, this.y+1, GameCanvas.blockSize-2, GameCanvas.blockSize-2);
+
+	canvas.fillStyle = "rgb(0,0,0);";
+	canvas.font="10px Arial";
+	canvas.fillText(this.ID,this.x,this.y+9);
 }
 
 
@@ -93,7 +108,7 @@ function Building() {
 		this.className = "building";
 		this.color = ColorBuilding;
 		this.height = Math.floor(Math.random() * 10) + 1;
-		this.flammable = Math.random() * 0.05 + 0.01;
+		this.flammable = Math.random() * 0.010 + 0.005;
 		this.sprite = "";
 	}
 }
@@ -103,7 +118,7 @@ function Grass() {
 		this.className = "grass";
 		this.color = ColorGrass;
 		this.height = 0;
-		this.flammable = Math.random() * 0.02 + 0.01;
+		this.flammable = Math.random() * 0.005 + 0.0001;
 		this.sprite = "";
 	}
 }
@@ -130,7 +145,7 @@ function GasStation() {
 		this.className = "gasstation";
 		this.color = ColorGasStation;
 		this.height = 2;
-		this.flammable = 0.80;
+		this.flammable = 0.50;
 		this.sprite = "";
 	}
 }
