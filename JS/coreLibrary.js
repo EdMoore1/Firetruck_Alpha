@@ -43,34 +43,13 @@ function GameCanvas() {
     };
 
     var GetSurroundings = function (position) {
-        var arr = [];
-        var lineOffset = (GameCanvas.canvasWidth/GameCanvas.blockSize);
+        var arr = GetFurtherSurroundings(position);
 
-        arr.push(position-1-lineOffset);    //TopLeft
-        arr.push(position-0-lineOffset);    //Top
-        arr.push(position+1-lineOffset);    //TopRight
-
-
-        arr.push(position-1);               //Left
-        // arr.push(position-0-lineOffset); //
-        arr.push(position+1);               //Right
-
-        arr.push(position-1+lineOffset);    //BotLeft
-        arr.push(position-0+lineOffset);    //Bottom
-        arr.push(position+1+lineOffset);    //BotRight
-
-        //Check the top and bot boundries
-        for(i = 0; i < arr.length; i++) {
-            if ( arr[i] < 0 || arr[i] > grid.length-1 ) {
+        //Remove things we don't need
+        for(var i in arr) {
+            if( Math.abs(arr[i] - position) > 35 )
                 delete arr[i];
-            }
-        }
-
-        //Check the side boundries
-        for(i = 0; i < arr.length; i++) {
-            if ((position%lineOffset==lineOffset-1) && (arr[i]%lineOffset==0))
-                delete arr[i];
-            if ((position%lineOffset==0) && (arr[i]%lineOffset==lineOffset-1))
+            if( Math.abs(arr[i] - position) == 2 )
                 delete arr[i];
         }
 
@@ -78,28 +57,13 @@ function GameCanvas() {
     };
 
     var GetDirectSurroundings = function (position) {
-        var arr = [];
+        var arr = GetSurroundings(position);
         var lineOffset = (GameCanvas.canvasWidth/GameCanvas.blockSize);
 
-        arr.push(position-0-lineOffset);    //Top
-
-        arr.push(position-1);               //Left
-        arr.push(position+1);               //Right
-
-        arr.push(position-0+lineOffset);    //Bottom
-
-        //Check the top and bot boundries
-        for(i = 0; i < arr.length; i++) {
-            if ( arr[i] < 0 || arr[i] > grid.length-1 ) {
-                delete arr[i];
-            }
-        }
-
-        //Check the side boundries
-        for(i = 0; i < arr.length; i++) {
-            if ((position%lineOffset==lineOffset-1) && (arr[i]%lineOffset==0))
-                delete arr[i];
-            if ((position%lineOffset==0) && (arr[i]%lineOffset==lineOffset-1))
+        //Remove things we don't need
+        for(var i in arr) {
+            if ( Math.floor(position/lineOffset) != Math.floor(arr[i]/lineOffset) &&
+                 position%lineOffset != arr[i]%lineOffset )
                 delete arr[i];
         }
 
