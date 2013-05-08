@@ -9,6 +9,7 @@ function FireTruck(Path) {
 
     FireTruck.prototype.Move = function() {
         var found = false;
+        var next = -1;
 
         //Don't move if you don't need to
         if(this.Stopped) return;
@@ -19,10 +20,17 @@ function FireTruck(Path) {
             if(this.Path[i] == this.Pos && !found) {
                 found = true;
             }else if(found) {
-                this.Pos = this.Path[i];
+                next = this.Path[i];
+
+                if(GameCanvas.onFire(next))
+                    this.Stopped = true;
+                else
+                    this.Pos = next;
                 return;
             }else{ }
         }
+
+
 
         if(found == true) this.Stopped = true;
     };

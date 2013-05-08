@@ -15,6 +15,7 @@ function GameCanvas() {
     var maxTrucks = 1;
     var trucks = Array();
     var truckNo = -1;
+    var fireFrequency = 30;
 
     //Core Variables
     var grid = initLevel.slice(0);
@@ -178,12 +179,91 @@ function GameCanvas() {
         return false;
     };
 
+    var intToBlock = function (i, pos) {
+        switch(i) {
+            case(0): return new Grass(pos);
+            case(1): return new Road(pos);
+            case(2): return new Building(pos);
+            case(3): return new FireStation(pos);
+            case(4): return new GasStation(pos);
+            case(5): return new River(pos);
+            case(6): return new Traffic(pos);
+            default:
+                throw new Error("CRITICAL: Unable to match int to BlockType (" + i +")");
+                return null;   //Will throw error
+        }
+    }
+
+
+
+    //Methods (public)
+    GameCanvas.prototype.restart = function () {
+        this.start(initLevel);
+    };
+
+    GameCanvas.prototype.start = function (levelArr, trucks) {
+        initLevel = levelArr.slice(0);
+        maxTrucks = trucks;
+
+        for(var i = 0; i < levelArr.length; i++) {
+            grid[i] = intToBlock(levelArr[i], i);
+            grid[i].init(i);
+        }
+
+        // grid[Math.floor(Math.random() * grid.length) + 1].burn();
+
+        winCondition = true;
+    };
+
+    GameCanvas.prototype.repaint = function () { GameCanvas.repaint(); };
+
+    GameCanvas.repaint = function () {
+        for (i = 0; i < grid.length; i++) {
+            grid[i].repaint(canvas);
+        }
+    };
+
+    GameCanvas.prototype.burn = function () {
+        grid[Math.floor(Math.random() * grid.length)].burn();
+    };
+
+    var sleep = function (ms) {
+        var dt = new Date();
+        dt.setTime(dt.getTime() + ms);
+        while ( new Date().getTime() < dt.getTime() ) {}
+    };
+
+
+    GameCanvas.onFire = function (pos) {
+        pos = parseInt(pos);
+        if(pos < 0 || pos > (GameCanvas.canvasWidth/GameCanvas.blockSize * GameCanvas.canvasHeight/GameCanvas.blockSize) )
+            return null;
+        return grid[pos].onFire;
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    /* ACTION CODE */
+
     var timer = setInterval( function() {
-        time++;
         var i, j;
         var foundTarget = false;
         var toBurn = Array();
         var burnCount;
+        var burnTarget = -1;
         
 
         //Evaluate burn conditions
@@ -225,6 +305,17 @@ function GameCanvas() {
             }
         }
 
+
+        if(time%fireFrequency == 0) {
+            while(burnTarget < 0 || grid[burnTarget].flammable == 0) {
+                burnTarget = Math.floor(Math.random() * grid.length) + 1;
+                for(i in trucks)
+                    if(trucks[i].Pos == burnTarget)
+                        burnTarget = -1;
+            }
+            toBurn.push(burnTarget);
+        }
+
         //Dont burn tiles that a truck is on
         for(i in trucks)
             for(j in toBurn)
@@ -245,62 +336,12 @@ function GameCanvas() {
         //Clean up the time
         if(secs < 10) 
             secs = "0" + secs;
+
+
         document.getElementById("timer").innerHTML = mins +":"+ secs;
+        time++;
     }, 1000);
 
-    var intToBlock = function (i, pos) {
-        switch(i) {
-            case(0): return new Grass(pos);
-            case(1): return new Road(pos);
-            case(2): return new Building(pos);
-            case(3): return new FireStation(pos);
-            case(4): return new GasStation(pos);
-            case(5): return new River(pos);
-            case(6): return new Traffic(pos);
-            default:
-                throw new Error("CRITICAL: Unable to match int to BlockType (" + i +")");
-                return null;   //Will throw error
-        }
-    }
-
-
-
-    //Methods (public)
-    GameCanvas.prototype.restart = function () {
-        this.start(initLevel);
-    };
-
-    GameCanvas.prototype.start = function (levelArr, trucks) {
-        initLevel = levelArr.slice(0);
-        maxTrucks = trucks;
-
-        for(var i = 0; i < levelArr.length; i++) {
-            grid[i] = intToBlock(levelArr[i], i);
-            grid[i].init(i);
-        }
-
-        grid[Math.floor(Math.random() * grid.length) + 1].burn();
-
-        winCondition = true;
-    };
-
-    GameCanvas.prototype.repaint = function () { GameCanvas.repaint(); };
-
-    GameCanvas.repaint = function () {
-        for (i = 0; i < grid.length; i++) {
-            grid[i].repaint(canvas);
-        }
-    };
-
-    GameCanvas.prototype.burn = function () {
-        grid[Math.floor(Math.random() * grid.length)].burn();
-    };
-
-    var sleep = function (ms) {
-        var dt = new Date();
-        dt.setTime(dt.getTime() + ms);
-        while ( new Date().getTime() < dt.getTime() ) {}
-    };
 
     c.addEventListener("mousedown", function (e) {
         var index = CalculateIndex(e.pageX, e.pageY);
@@ -382,22 +423,24 @@ function GameCanvas() {
             var i;
             var count = 0;
 
+            if(index < (GameCanvas.canvasWidth/GameCanvas.blockSize * GameCanvas.canvasHeight/GameCanvas.blockSize) ) {
 
-            for ( i in surround ) {
-                if (grid[surround[i]].highlighted || grid[surround[i]].className === "FireStation") {
-                    count++;
+                for ( i in surround ) {
+                    if (grid[surround[i]].highlighted || grid[surround[i]].className === "FireStation") {
+                        count++;
+                    }
                 }
-            }
 
 
-            if ( !(grid[index].height > 0) && !grid[index].onFire && (e.pageX-c.offsetLeft) < GameCanvas.canvasWidth &&
-                 (lastDragged == null || inArray(lastDragged, surround)) ) {
-                if (highlightedPath.indexOf(index) == -1) {
-                    highlightedPath.push(index);
-                    lastDragged = index;
-                }   
-                grid[index].highlight();
-                grid[index].repaint(canvas);
+                if ( !(grid[index].height > 0) && !grid[index].onFire && (e.pageX-c.offsetLeft) < GameCanvas.canvasWidth &&
+                     (lastDragged == null || inArray(lastDragged, surround)) ) {
+                    if (highlightedPath.indexOf(index) == -1) {
+                        highlightedPath.push(index);
+                        lastDragged = index;
+                    }   
+                    grid[index].highlight();
+                    grid[index].repaint(canvas);
+                }
             }
         }
     });
