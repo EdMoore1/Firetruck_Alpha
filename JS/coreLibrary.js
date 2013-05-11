@@ -368,7 +368,7 @@ function GameCanvas() {
     c.addEventListener("mousedown", function (e) {
         var index = CalculateIndex(e.pageX, e.pageY);
         var lineOffset = (GameCanvas.canvasWidth/GameCanvas.blockSize);
-        var surround = GetSurroundings(index);
+        var surround = GetDirectSurroundings(index);
         var fromStart = false;
         truckNo = -1;
         var i;
