@@ -21,6 +21,7 @@ function GameCanvas() {
     var grid = initLevel.slice(0);
     var DIST_SCALAR = 8;
     var MAX_BURN_COUNT = 5;
+    var PAUSE_WHILE_DRAGGING = true;
 
     var dragging = false;
     var safeMode = false;    //Only allow trucks sent straight to fires
@@ -266,99 +267,101 @@ function GameCanvas() {
     /* ACTION CODE */
 
     var timer = setInterval( function() {
-        var i, j;
-        var foundTarget = false;
-        var toBurn = Array();
-        var burnCount;
-        var burnTarget = -1;
-        
+        if (!(dragging && PAUSE_WHILE_DRAGGING)) {
+            var i, j;
+            var foundTarget = false;
+            var toBurn = Array();
+            var burnCount;
+            var burnTarget = -1;
+            
 
-        //Evaluate burn conditions
-        //May need optimisation
-        for(i in grid) {
-            if (grid[i].onFire) {
-                var sur = GetFurtherSurroundings(grid[i].ID);
-                burnCount = 0;
-                for(j in sur) {
-                    if( grid[sur[j]].flammable != 0 && 
-                        ([0,1,2,3,4,5,10,13,14,,18,19,20,21,22,23].indexOf(j) >= 0 && (Math.random() < (grid[sur[j]].flammable/DIST_SCALAR)) ||
-                        (Math.random() < grid[sur[j]].flammable)))
-                        if(burnCount++ < MAX_BURN_COUNT)
-                            toBurn.push(sur[j]);
-                }
-        } }
-
-        //Update all the tiles
-        for(i in grid) {
-            grid[i].update();
-            grid[i].repaint(canvas);
-        }
-
-        //Truck operations
-        for(i in trucks) {
-            if( trucks[i].Stopped == true ) {
-                trucks[i].Repaint(canvas);
-                var sur = GetSurroundings(trucks[i].last());
-                for(j in sur)
-                    if(!foundTarget && grid[sur[j]].onFire) {
-                        foundTarget = true;
-                        grid[sur[j]].sprayed();
+            //Evaluate burn conditions
+            //May need optimisation
+            for(i in grid) {
+                if (grid[i].onFire) {
+                    var sur = GetFurtherSurroundings(grid[i].ID);
+                    burnCount = 0;
+                    for(j in sur) {
+                        if( grid[sur[j]].flammable != 0 && 
+                            ([0,1,2,3,4,5,10,13,14,,18,19,20,21,22,23].indexOf(j) >= 0 && (Math.random() < (grid[sur[j]].flammable/DIST_SCALAR)) ||
+                            (Math.random() < grid[sur[j]].flammable)))
+                            if(burnCount++ < MAX_BURN_COUNT)
+                                toBurn.push(sur[j]);
                     }
-            }else{
-                trucks[i].Move();
-                trucks[i].Repaint(canvas);
-                // if(trucks[i].last() != null && !trucks[i].stopped)
-                    // grid[trucks[i].last()].repaint(canvas);
+            } }
+
+            //Update all the tiles
+            for(i in grid) {
+                grid[i].update();
+                grid[i].repaint(canvas);
             }
-        }
 
-
-        if(time%fireFrequency == 0) {
-            while(burnTarget < 0 || grid[burnTarget].flammable == 0) {
-                burnTarget = Math.floor(Math.random() * grid.length);
-                for(i in trucks)
-                    if(trucks[i].Pos == burnTarget)
-                        burnTarget = -1;
+            //Truck operations
+            for(i in trucks) {
+                if( trucks[i].Stopped == true ) {
+                    trucks[i].Repaint(canvas);
+                    var sur = GetSurroundings(trucks[i].last());
+                    for(j in sur)
+                        if(!foundTarget && grid[sur[j]].onFire) {
+                            foundTarget = true;
+                            grid[sur[j]].sprayed();
+                        }
+                }else{
+                    trucks[i].Move();
+                    trucks[i].Repaint(canvas);
+                    // if(trucks[i].last() != null && !trucks[i].stopped)
+                        // grid[trucks[i].last()].repaint(canvas);
+                }
             }
-            toBurn.push(burnTarget);
-        }
 
-        //Dont burn tiles that a truck is on
-        for(i in trucks)
-            for(j in toBurn)
-                if(trucks[i].Pos == toBurn[j])
-                    delete toBurn[j];
 
-        //Burn the tiles required
-        for(i in toBurn) {
-            grid[toBurn[i]].burn();
-            grid[toBurn[i]].repaint(canvas);
-        }
-
-        //Evaluate win conditions
-        var noFires = true;
-        for(i in grid) {
-            if(grid[i].onFire) {
-                noFires = false;
-                break;
+            if(time%fireFrequency == 0) {
+                while(burnTarget < 0 || grid[burnTarget].flammable == 0) {
+                    burnTarget = Math.floor(Math.random() * grid.length);
+                    for(i in trucks)
+                        if(trucks[i].Pos == burnTarget)
+                            burnTarget = -1;
+                }
+                toBurn.push(burnTarget);
             }
+
+            //Dont burn tiles that a truck is on
+            for(i in trucks)
+                for(j in toBurn)
+                    if(trucks[i].Pos == toBurn[j])
+                        delete toBurn[j];
+
+            //Burn the tiles required
+            for(i in toBurn) {
+                grid[toBurn[i]].burn();
+                grid[toBurn[i]].repaint(canvas);
+            }
+
+            //Evaluate win conditions
+            var noFires = true;
+            for(i in grid) {
+                if(grid[i].onFire) {
+                    noFires = false;
+                    break;
+                }
+            }
+
+            if(noFires) {
+                GameCanvas.end(true);
+            }
+
+            //Increment the timer
+            var mins = Math.floor(time/60);
+            var secs = Math.floor(time%60);
+
+            //Clean up the time
+            if(secs < 10) 
+                secs = "0" + secs;
+
+
+            document.getElementById("timer").innerHTML = mins +":"+ secs;
+            time++;
         }
-
-        if(noFires) {
-            GameCanvas.end(true);
-        }
-
-        //Increment the timer
-        var mins = Math.floor(time/60);
-        var secs = Math.floor(time%60);
-
-        //Clean up the time
-        if(secs < 10) 
-            secs = "0" + secs;
-
-
-        document.getElementById("timer").innerHTML = mins +":"+ secs;
-        time++;
     }, 1000);
 
 
