@@ -307,8 +307,8 @@ function GameCanvas() {
             }else{
                 trucks[i].Move();
                 trucks[i].Repaint(canvas);
-                if(trucks[i].last() != null)
-                    grid[trucks[i].last()].repaint(canvas);
+                // if(trucks[i].last() != null && !trucks[i].stopped)
+                    // grid[trucks[i].last()].repaint(canvas);
             }
         }
 
