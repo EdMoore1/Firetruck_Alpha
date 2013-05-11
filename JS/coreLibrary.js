@@ -23,6 +23,7 @@ function GameCanvas() {
     var MAX_BURN_COUNT = 5;
 
     var dragging = false;
+    var safeMode = false;    //Only allow trucks sent straight to fires
 
 
     //Functions not methods (private)
@@ -215,6 +216,12 @@ function GameCanvas() {
         winCondition = true;
     };
 
+    GameCanvas.prototype.end = function(won) {
+        winCondition = false;
+
+        console.log('winnar');
+    }
+
     GameCanvas.prototype.repaint = function () { GameCanvas.repaint(); };
 
     GameCanvas.repaint = function () {
@@ -308,7 +315,7 @@ function GameCanvas() {
 
         if(time%fireFrequency == 0) {
             while(burnTarget < 0 || grid[burnTarget].flammable == 0) {
-                burnTarget = Math.floor(Math.random() * grid.length) + 1;
+                burnTarget = Math.floor(Math.random() * grid.length);
                 for(i in trucks)
                     if(trucks[i].Pos == burnTarget)
                         burnTarget = -1;
@@ -328,6 +335,18 @@ function GameCanvas() {
             grid[toBurn[i]].repaint(canvas);
         }
 
+        //Evaluate win conditions
+        var noFires = true;
+        for(i in grid) {
+            if(grid[i].onFire) {
+                noFires = false;
+                break;
+            }
+        }
+
+        if(noFires) {
+            GameCanvas.end(true);
+        }
 
         //Increment the timer
         var mins = Math.floor(time/60);
@@ -398,7 +417,7 @@ function GameCanvas() {
             if(grid[surround[i]].onFire)
                 fireCount++;
 
-        if(fireCount>0) {
+        if(fireCount>0 || !safeMode) {
             //Move or Create fire truck
             if(truckNo > -1) {
                 trucks[truckNo].setPath(highlightedPath);

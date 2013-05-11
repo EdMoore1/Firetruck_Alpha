@@ -18,7 +18,7 @@ var ColorFire = 'rgb(255,102,000)';
 
 //CONFIG
 var TimeScalar = 30;
-var Debugging = true;
+var Debugging = false;
 
 
 function Element(position) {
@@ -83,22 +83,22 @@ Element.prototype.burn = function () {
 Element.prototype.highlight = function () { this.highlighted = true; this.color = ColorHighlighted; }
 Element.prototype.unHighlight = function () { this.color = this.originalColor; this.highlighted = false; }
 Element.prototype.repaint = function(canvas) {
-	// canvas.fillStyle = this.color;
-	// canvas.fillRect(this.x, this.y, GameCanvas.blockSize, GameCanvas.blockSize);	
-
-
-
 
 	//Debugging
-	canvas.fillStyle = "rgb(0,0,0);";
-	canvas.fillRect(this.x, this.y, GameCanvas.blockSize, GameCanvas.blockSize);	
-	
-	canvas.fillStyle = this.color;
-	canvas.fillRect(this.x+1, this.y+1, GameCanvas.blockSize-2, GameCanvas.blockSize-2);
+	if( Debugging ) {
+		canvas.fillStyle = "rgb(0,0,0);";
+		canvas.fillRect(this.x, this.y, GameCanvas.blockSize, GameCanvas.blockSize);	
+		
+		canvas.fillStyle = this.color;
+		canvas.fillRect(this.x+1, this.y+1, GameCanvas.blockSize-2, GameCanvas.blockSize-2);
 
-	canvas.fillStyle = "rgb(0,0,0);";
-	canvas.font="10px Arial";
-	canvas.fillText(this.ID,this.x,this.y+9);
+		canvas.fillStyle = "rgb(0,0,0);";
+		canvas.font="10px Arial";
+		canvas.fillText(this.ID,this.x,this.y+9);
+	}else {
+		canvas.fillStyle = this.color;
+		canvas.fillRect(this.x, this.y, GameCanvas.blockSize, GameCanvas.blockSize);	
+	}
 }
 
 
