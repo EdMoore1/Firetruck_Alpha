@@ -3,7 +3,7 @@ function NewsFeed() {
     "use strict";
     NewsFeed.canvasWidth = 1024;
     NewsFeed.canvasHeight = 20;
-    NewsFeed.moveSpeed = 5;
+    NewsFeed.moveSpeed = 2;
     NewsFeed.FPS = 30;
     var c = document.getElementById("news");
     var canvas = c.getContext("2d");
