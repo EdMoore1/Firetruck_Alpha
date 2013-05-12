@@ -196,14 +196,11 @@ function GameCanvas() {
         }
     }
 
-
-
-    //Methods (public)
-    GameCanvas.prototype.restart = function () {
+    var restart = function () {
         this.start(initLevel);
     };
 
-    GameCanvas.prototype.start = function (levelArr, trucks) {
+    var start = function (levelArr, trucks) {
         initLevel = levelArr.slice(0);
         maxTrucks = trucks;
 
@@ -217,12 +214,16 @@ function GameCanvas() {
         winCondition = true;
     };
 
-    GameCanvas.prototype.end = function(won) {
+    var end = function(won) {
         winCondition = false;
+        clearInterval(timer);
 
         console.log('winnar');
     }
 
+
+    //Methods (public)
+    GameCanvas.prototype.start = function (levelArr, trucks) { start(levelArr, trucks); }
     GameCanvas.prototype.repaint = function () { GameCanvas.repaint(); };
 
     GameCanvas.repaint = function () {
@@ -347,7 +348,7 @@ function GameCanvas() {
             }
 
             if(noFires) {
-                GameCanvas.end(true);
+                end(true);
             }
 
             //Increment the timer
