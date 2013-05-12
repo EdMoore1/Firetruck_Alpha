@@ -5,6 +5,7 @@
 		<script src="JS/elementsLibrary.js" type="text/javascript"></script>
 		<script src="JS/firetruckLibrary.js" type="text/javascript"></script>
 		<script src="JS/coreLibrary.js" type="text/javascript"></script>
+		<script src="JS/newsLibrary.js" type="text/javascript"></script>
 		<script src="JS/levels.js" type="text/javascript"></script>
 		<style type="text/css">
 			canvas { border: 1px solid #333; width: 1024px; display: block; }
@@ -16,6 +17,8 @@
 				var game = new GameCanvas();
 				game.start(level0, 3);
 				game.repaint();
+				var news = new NewsFeed();
+				news.start();
 			}
 		</script>
 	</head>
@@ -23,6 +26,6 @@
 	<body>
 		<div id="points" width="1024px" height="30px"><div id="timer">0:00</div></div>
 		<canvas id="game" width="1024px" height="640px"></canvas>
-		<div id="news" width="1024px" height="20px"></div>
+		<canvas id="news" width="1024px" height="20px"></canvas>
 	</body>
 </html>
