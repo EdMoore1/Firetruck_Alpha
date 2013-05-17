@@ -222,7 +222,7 @@ function GameCanvas() {
 
         console.log('winnar');
         img.src = 'images/victory.jpg';
-        // console.log(img.src);
+        console.log(img.src);
         canvas.drawImage(img, 0,0);
     }
 
