@@ -16,6 +16,7 @@ function GameCanvas() {
     var trucks = Array();
     var truckNo = -1;
     var fireFrequency = 30;
+    var img = new Image();
 
     //Core Variables
     var grid = initLevel.slice(0);
@@ -218,7 +219,11 @@ function GameCanvas() {
         winCondition = false;
         clearInterval(timer);
 
+
         console.log('winnar');
+        img.src = 'images/victory.jpg';
+        // console.log(img.src);
+        canvas.drawImage(img, 0,0);
     }
 
 
