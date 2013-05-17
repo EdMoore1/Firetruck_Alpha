@@ -255,6 +255,10 @@ function GameCanvas() {
         return grid[pos].onFire;
     }
 
+    GameCanvas.paused = function () {
+        return dragging;
+    }
+
 
 
 

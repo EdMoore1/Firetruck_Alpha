@@ -31,7 +31,7 @@ function NewsFeed() {
 
     var timer = setInterval(function() {
 
-        if(writing) {
+        if( writing && !GameCanvas.paused() ) {
             canvas.font="18px Arial";
             canvas.fillStyle = "rgb(255,255,255);";
             canvas.fillRect(0, 0, NewsFeed.canvasWidth, NewsFeed.canvasHeight);
