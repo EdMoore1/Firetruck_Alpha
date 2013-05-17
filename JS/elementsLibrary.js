@@ -36,6 +36,7 @@ function Element(position) {
 	this.y = null;
 	this.type = null;
 	this.highlighted = null;
+	this.img = new Image();
 
 	this.init = function(position) {
 		this.typeInit();
@@ -49,6 +50,7 @@ function Element(position) {
 		this.x = Math.floor( (position*GameCanvas.blockSize)%(GameCanvas.canvasWidth) );
 		this.y = ( Math.floor((position*GameCanvas.blockSize)/(GameCanvas.canvasWidth))*GameCanvas.blockSize );
 		this.highlighted = false;
+		this.img.src = "sprites/" + this.className +".gif";
 
 		return this;
 	}
@@ -97,7 +99,7 @@ Element.prototype.repaint = function(canvas) {
 		canvas.fillText(this.ID,this.x,this.y+9);
 	}else {
 		canvas.fillStyle = this.color;
-		canvas.fillRect(this.x, this.y, GameCanvas.blockSize, GameCanvas.blockSize);	
+		canvas.fillRect(this.x, this.y, GameCanvas.blockSize, GameCanvas.blockSize);
 	}
 }
 

@@ -311,11 +311,13 @@ function GameCanvas() {
                 if( trucks[i].Stopped == true ) {
                     trucks[i].Repaint(canvas);
                     var sur = GetSurroundings(trucks[i].last());
-                    for(j in sur)
-                        if(!foundTarget && grid[sur[j]].onFire) {
+                    for(j in sur) {
+
+                        if(!foundTarget && !isNaN(sur[j]) && grid[sur[j]].onFire) {
                             foundTarget = true;
                             grid[sur[j]].sprayed();
                         }
+                    }
                 }else{
                     trucks[i].Move();
                     trucks[i].Repaint(canvas);
