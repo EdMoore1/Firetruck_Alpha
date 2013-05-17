@@ -377,7 +377,14 @@ function GameCanvas() {
     }, 1000);
 
 
-    c.addEventListener("mousedown", function (e) {
+    c.addEventListener("mousedown", MouseDownHandler, false);
+    c.addEventListener("mouseup", MouseUpHandler, false);
+    c.addEventListener("mousemove", MouseMoveHandler, false);
+    c.addEventListener("touchstart", MouseDownHandler, false);
+    c.addEventListener("touchend", MouseUpHandler, false);
+    c.addEventListener("touchmove", MouseMoveHandler, false);
+
+    function MouseDownHandler(e) {
         var index = CalculateIndex(e.pageX, e.pageY);
         var lineOffset = (GameCanvas.canvasWidth/GameCanvas.blockSize);
         var surround = GetDirectSurroundings(index);
@@ -385,6 +392,7 @@ function GameCanvas() {
         truckNo = -1;
         var i;
         highlightedPath = new Array();
+        e.preventDefault();
 
         //Check that the initial start location is the firestation
         for ( i in surround ) {
@@ -399,15 +407,14 @@ function GameCanvas() {
 
         //Initialise the dragging code, After this the dragging code takes care of the highlighting
         if (fromStart || truckNo > -1) { dragging = true; }
-    }, false);
+    }
 
-
-
-    c.addEventListener("mouseup", function(e) {
+    function MouseUpHandler(e) {
         dragging = false;
         var count = 0;
         var i;
         var fireCount = 0;
+        e.preventDefault();
 
         lastDragged = null;
 
@@ -442,20 +449,15 @@ function GameCanvas() {
                 highlightedPath = Array();
             }
         }
+    }
 
-
-    }, false);
-
-
-
-
-    c.addEventListener("mousemove", function(e) {
-
+    function MouseMoveHandler(e) {
         if ( dragging ) {
             var index = CalculateIndex(e.pageX, e.pageY);
             var surround = GetDirectSurroundings(index);
             var i;
             var count = 0;
+            e.preventDefault();
 
             if(index < (GameCanvas.canvasWidth/GameCanvas.blockSize * GameCanvas.canvasHeight/GameCanvas.blockSize) ) {
 
@@ -477,10 +479,7 @@ function GameCanvas() {
                 }
             }
         }
-    });
-
-
-
+    }
 
     GameCanvas.StartDebugging = function (tile) { 
         for( var i in grid ) {
