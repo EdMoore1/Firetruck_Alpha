@@ -39,13 +39,6 @@ function GameCanvas() {
         return (posY) * (GameCanvas.canvasWidth / GameCanvas.blockSize) + (posX);
     };
 
-    GameCanvas.UnhightlightAll = function () {
-        for (i = 0; i < grid.length; i++) {
-            grid[i].unHighlight();
-        }
-        GameCanvas.repaint();
-    };
-
     var GetSurroundings = function (position) {
         var arr = GetFurtherSurroundings(position);
 
@@ -224,7 +217,22 @@ function GameCanvas() {
         img.src = 'images/victory.jpg';
         console.log(img.src);
         canvas.drawImage(img, 0,0);
+
+
+        //Print the Victory Message
+
+        //Print the Points and Time taken
+
+        //
     }
+
+
+
+
+
+
+
+
 
 
     //Methods (public)
