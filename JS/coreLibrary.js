@@ -4,6 +4,7 @@ function GameCanvas() {
     GameCanvas.canvasWidth = 1024;
     GameCanvas.canvasHeight = 640;
     GameCanvas.blockSize = 32;          //Should be one of 1, 2, 4, 8, 16, 32, 64, 128
+    GameCanvas.levels = levels;
     var c = document.getElementById("game");
     var canvas = c.getContext("2d");
     var i, j;
@@ -17,6 +18,7 @@ function GameCanvas() {
     var truckNo = -1;
     var fireFrequency = 30;
     var img = new Image();
+    var currentLevel = 0;
 
     //Core Variables
     var grid = initLevel.slice(0);
@@ -194,16 +196,14 @@ function GameCanvas() {
         this.start(initLevel);
     };
 
-    var start = function (levelArr, trucks) {
-        initLevel = levelArr.slice(0);
-        maxTrucks = trucks;
+    var start = function () {
+        var level = GameCanvas.levels[currentLevel]['level'].slice(0);
+        maxTrucks = GameCanvas.levels[currentLevel]['trucks'];
 
-        for(var i = 0; i < levelArr.length; i++) {
-            grid[i] = intToBlock(levelArr[i], i);
+        for(var i = 0; i < level.length; i++) {
+            grid[i] = intToBlock(level[i], i);
             grid[i].init(i);
         }
-
-        // grid[Math.floor(Math.random() * grid.length) + 1].burn();
 
         winCondition = true;
     };

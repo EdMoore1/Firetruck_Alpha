@@ -1,6 +1,6 @@
-function MyClass() {
+function MyClass(some) {
     var privateVar = "blah";
-    this.publicVar = "blha";
+    this.publicVar = some;
 
     this.publicMethod = function() {}
     MyClass.staticMethod = function() {}

@@ -14,8 +14,8 @@
 
 		<script type="text/javascript">
 			window.onload = function () {
-				var game = new GameCanvas();
-				game.start(level0, 3);
+				var game = new GameCanvas(levels);
+				game.start(levels, 3);
 				game.repaint();
 				var news = new NewsFeed();
 				news.start();
