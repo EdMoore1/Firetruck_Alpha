@@ -1,0 +1,19 @@
+/*
+
+*/
+
+*{ padding: 0px 0px 0px 0px; margin: 0px 0px 0px 0px; vertical-align: top; font-size: 14px; color: #F0F0F0; }
+body{ background: url('../images/background.jpg') no-repeat center #000; }
+div#allContent { width: 1024px; margin: auto; padding: 10px; }
+img#logo { float: left; }
+h1 { font-size: 48px; float: left; margin-left: 100px; }
+h1 > span { display: block; margin-top: -5px; margin-left: 5px; }
+
+ul#menu { clear: both; list-style: none; margin: auto; padding-top: 10px; margin-bottom: 30px; }
+ul#menu li { display: inline-block; width: 253px; height: 30px; background: green; padding-top: 10px; text-align: center; }
+
+div#slider { width: 1024px; height: 640px; list-style: none; overflow-y: auto; overflow-x: hidden; }
+div#slider div { display: none; }
+div#slider div:first-child { display: block; }
+
+div#footer { margin-top: 50px; width: 1024px; text-align: center; }
