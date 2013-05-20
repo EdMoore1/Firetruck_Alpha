@@ -235,7 +235,11 @@ function GameCanvas() {
                     }
                 }
 
-                if(tmp[0] == 1 && tmp[3] == 1 && tmp[2] == 1)
+
+                //Work out which road tile to use.
+                if(tmp[0] == 1 && tmp[1] == 1 && tmp[2] == 1 && tmp[3] == 1)
+                    grid[i].setDir("x1");
+                else if(tmp[0] == 1 && tmp[3] == 1 && tmp[2] == 1)
                     grid[i].setDir("t1");
                 else if(tmp[0] == 1 && tmp[1] == 1 && tmp[2] == 1)
                     grid[i].setDir("t2");

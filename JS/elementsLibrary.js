@@ -12,7 +12,7 @@ var ColorFire = 'rgb(255,102,000)';
 
 //CONFIG
 var TimeScalar = 30;
-var Debugging = true;
+var Debugging = false;
 
 
 function Element(position) {
@@ -77,6 +77,7 @@ function Element(position) {
 Element.prototype.burn = function () { 
 	if(this.flammable > 0) {
 		this.color = ColorFire;
+		this.img.src = "images/sprites/fire.png";
 		this.onFire = true;
 	}
 }
@@ -84,7 +85,9 @@ Element.prototype.highlight = function () { this.highlighted = true; this.color 
 Element.prototype.unHighlight = function () { this.color = this.originalColor; this.highlighted = false; }
 Element.prototype.repaint = function(canvas) {
 
-	if(this.className == "road")
+	if(this.sprite == "")
+		this.img.src = "images/sprites/" + this.className +".jpg";
+	else
 		this.img.src = "images/sprites/" + this.className +"_"+ this.sprite +".jpg";
 
 	//Debugging
@@ -102,11 +105,16 @@ Element.prototype.repaint = function(canvas) {
 		canvas.font="10px Arial";
 		canvas.fillText(this.ID,this.x,this.y+9);
 	}else {
-		if(this.highlighted || this.onFire) {
+		if(this.highlighted) {
 			canvas.fillStyle = this.color;
 			canvas.fillRect(this.x, this.y, GameCanvas.blockSize, GameCanvas.blockSize);
 		}else
         	canvas.drawImage(this.img, this.x, this.y, GameCanvas.blockSize, GameCanvas.blockSize * (this.img.height / this.img.width));
+
+        if(this.onFire) {
+			this.img.src = "images/sprites/fire.png";
+			canvas.drawImage(this.img, this.x, this.y, GameCanvas.blockSize, GameCanvas.blockSize * (this.img.height / this.img.width));
+		}
 	}
 }
 
