@@ -1,9 +1,3 @@
-//Sprites
-var SPRITE_BUILDING_ARRAY = ["sprites/building001.gif"];
-var SPRITE_GRASS_ARRAY = ["sprites/grass001.gif"];
-var SPRITE_FIRESTATION_ARRAY = ["sprites/firstStation001.gif"];
-var SPRITE_GASSTATION_ARRAY = ["sprites/gasStation001.gif"];
-
 //Colors
 var ColorWater = "rgb(25,184,212)";
 var ColorBuilding = "rgb(95,158,160)";
@@ -18,7 +12,7 @@ var ColorFire = 'rgb(255,102,000)';
 
 //CONFIG
 var TimeScalar = 30;
-var Debugging = false;
+var Debugging = true;
 
 
 function Element(position) {
@@ -50,7 +44,11 @@ function Element(position) {
 		this.x = Math.floor( (position*GameCanvas.blockSize)%(GameCanvas.canvasWidth) );
 		this.y = ( Math.floor((position*GameCanvas.blockSize)/(GameCanvas.canvasWidth))*GameCanvas.blockSize );
 		this.highlighted = false;
-		this.img.src = "sprites/" + this.className +".gif";
+		this.sprite = "";
+		if(this.sprite == "")
+			this.img.src = "images/sprites/" + this.className +".jpg";
+		else
+			this.img.src = "images/sprites/" + this.className +"_"+ this.sprite +".jpg";
 
 		return this;
 	}
@@ -86,20 +84,25 @@ Element.prototype.highlight = function () { this.highlighted = true; this.color 
 Element.prototype.unHighlight = function () { this.color = this.originalColor; this.highlighted = false; }
 Element.prototype.repaint = function(canvas) {
 
+	if(this.className == "road")
+		this.img.src = "images/sprites/" + this.className +"_"+ this.sprite +".jpg";
+
 	//Debugging
 	if( Debugging ) {
 		canvas.fillStyle = "rgb(0,0,0);";
-		canvas.fillRect(this.x, this.y, GameCanvas.blockSize, GameCanvas.blockSize);	
+		canvas.fillRect(this.x, this.y, GameCanvas.blockSize, GameCanvas.blockSize);
 		
-		canvas.fillStyle = this.color;
-		canvas.fillRect(this.x+1, this.y+1, GameCanvas.blockSize-2, GameCanvas.blockSize-2);
+		canvas.drawImage(this.img, this.x+1, this.y+1, GameCanvas.blockSize-2, (GameCanvas.blockSize-2) * (this.img.height / this.img.width));
 
 		canvas.fillStyle = "rgb(0,0,0);";
 		canvas.font="10px Arial";
 		canvas.fillText(this.ID,this.x,this.y+9);
 	}else {
-		canvas.fillStyle = this.color;
-		canvas.fillRect(this.x, this.y, GameCanvas.blockSize, GameCanvas.blockSize);
+		if(this.highlighted || this.onFire) {
+			canvas.fillStyle = this.color;
+			canvas.fillRect(this.x, this.y, GameCanvas.blockSize, GameCanvas.blockSize);
+		}else
+        	canvas.drawImage(this.img, this.x, this.y, GameCanvas.blockSize, GameCanvas.blockSize * (this.img.height / this.img.width));
 	}
 }
 
@@ -140,6 +143,11 @@ function Road() {
 		this.height = 0;
 		this.flammable = 0;
 		this.sprite = "";
+	}
+
+	this.setDir = function(direction) {
+		this.sprite = direction;
+		this.img.src = "images/sprites/" + this.className +"_"+ this.sprite +".jpg";
 	}
 }
 function GasStation() {

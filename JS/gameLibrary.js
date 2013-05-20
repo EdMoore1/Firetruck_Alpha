@@ -205,6 +205,131 @@ function GameCanvas() {
             grid[i].init(i);
         }
 
+        for(var i = 0; i < grid.length; i++) {
+            if(grid[i].className == "road") {
+                var sur = GetDirectSurroundings(i);
+
+
+                /*
+                            7
+                        11  *   12
+                            16
+
+                            0
+                        1   *   2
+                            3
+                */
+
+                var indexes = [7,11,12,16];
+                var tmp = new Array();
+
+                for(var j in indexes) {
+                    if(isNaN( sur[indexes[j]] )) {
+                        tmp[j] = -1;
+                    }else{
+                        if(grid[sur[indexes[j]]].className == "road"){
+                            tmp[j] = 1;
+                        }else{
+                            tmp[j] = 0;
+                        }
+                    }
+                }
+
+                if(i == 128)
+                    console.log(sur);
+
+
+
+                if(tmp[0] == 1 && tmp[2] == 1)
+                    grid[i].setDir("c1");
+                else if(tmp[0] == 1 && tmp[1] == 1)
+                    grid[i].setDir("c2");
+                else if(tmp[3] == 1 && tmp[1] == 1)
+                    grid[i].setDir("c3");
+                else if(tmp[3] == 1 && tmp[2] == 1)
+                    grid[i].setDir("c4");
+                else if(tmp[1] == 1 || tmp[2] == 1)
+                    grid[i].setDir("h1");
+                else if(tmp[0] == 1 || tmp[3] == 1)
+                    grid[i].setDir("v1");
+                else
+                    console.log("Error assigning road #: " + i +"("+ tmp +")");
+/*
+                
+                //TopLeft
+                if(isNaN(sur[7]) && isNaN(sur[11])) {
+                    if(grid[sur[12]].className == "road" && grid[sur[16]].className == "road")
+                        grid[i].setDir("C2");
+                    else if(grid[sur[16]].className == "road")
+                        grid[i].setDir("V1");
+                    else if(grid[sur[12]].className == "road")
+                        grid[i].setDir("H1");
+                }
+                //TopRight
+                else if(isNaN(sur[7]) && isNaN(sur[12])) {
+                    if(grid[sur[11]].className == "road" && grid[sur[16]].className == "road")
+                        grid[i].setDir("C3");
+                    else if(grid[sur[16]].className == "road")
+                        grid[i].setDir("V1");
+                    else if(grid[sur[11]].className == "road")
+                        grid[i].setDir("H1");
+                }
+                //BottomLeft
+                else if(isNaN(sur[16]) && isNaN(sur[11])) {
+                    if(grid[sur[12]].className == "road" && grid[sur[7]].className == "road")
+                        grid[i].setDir("C1");
+                    else if(grid[sur[7]].className == "road")
+                        grid[i].setDir("V1");
+                    else if(grid[sur[12]].className == "road")
+                        grid[i].setDir("H1");
+                }
+                //BottomRight
+                else if(isNaN(sur[16]) && isNaN(sur[12])) {
+                    if(grid[sur[11]].className == "road" && grid[sur[7]].className == "road")
+                        grid[i].setDir("C4");
+                    else if(grid[sur[7]].className == "road")
+                        grid[i].setDir("V1");
+                    else if(grid[sur[11]].className == "road")
+                        grid[i].setDir("H1");
+                }
+                //TopRow
+                else if(isNaN(sur[7])) {
+                    if(grid[sur[16]].className == "road" && grid[sur[11]].className != "road" && grid[sur[12]].className != "road")
+                        grid[i].setDir("V1");
+                    else if(grid[sur[16]].className == "road" && grid[sur[11]].className == "road")
+                        grid[i].setDir("C2");
+                    else if(grid[sur[16]].className == "road" && grid[sur[12]].className == "road")
+                        grid[i].setDir("C3");
+                    else if(grid[sur[11]].className == "road" || grid[sur[12]].className == "road")
+                        grid[i].setDir("H1");
+                }
+                //BotRow
+                else if(isNaN(sur[16])) {
+                    if(grid[sur[7]].className == "road" && grid[sur[11]].className != "road" && grid[sur[12]].className != "road")
+                        grid[i].setDir("V1");
+                    else if(grid[sur[7]].className == "road" && grid[sur[11]].className == "road")
+                        grid[i].setDir("C2");
+                    else if(grid[sur[7]].className == "road" && grid[sur[12]].className == "road")
+                        grid[i].setDir("C3");
+                    else if(grid[sur[11]].className == "road" || grid[sur[12]].className == "road")
+                        grid[i].setDir("H1");
+                }
+                //LeftCol
+                else if(isNaN(sur[11])) {
+                    if(grid[sur[7]].className == "road" && grid[sur[11]].className != "road" && grid[sur[12]].className != "road")
+                        grid[i].setDir("V1");
+                    else if(grid[sur[7]].className == "road" && grid[sur[11]].className == "road")
+                        grid[i].setDir("C2");
+                    else if(grid[sur[7]].className == "road" && grid[sur[12]].className == "road")
+                        grid[i].setDir("C3");
+                    else if(grid[sur[11]].className == "road" || grid[sur[12]].className == "road")
+                        grid[i].setDir("H1");
+                }
+                //RightCol
+*/
+            }
+        }
+
         winCondition = true;
     };
 
