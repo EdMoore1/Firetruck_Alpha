@@ -167,6 +167,32 @@ function Tree() {
 	}
 }
 
+function River() {
+	this.typeInit = function() {
+		this.className = "river";
+		this.height = 1;
+		this.flammable = 0;
+	}
+
+	this.setDir = function(direction) {
+		this.sprite = direction;
+		this.img.src = "images/sprites/" + this.className +"_"+ this.sprite +".jpg";
+	}
+}
+
+function RiverBridge() {
+	this.typeInit = function() {
+		this.className = "river";
+		this.height = 0;
+		this.flammable = 0;
+	}
+
+	this.setDir = function(direction) {
+		this.sprite = "b_" + direction;
+		this.img.src = "images/sprites/" + this.className +"_"+ this.sprite +".jpg";
+	}
+}
+
 // Inherit from Super
 Building.prototype = new Element();
 Grass.prototype = new Element();
@@ -174,3 +200,5 @@ FireStation.prototype = new Element();
 Road.prototype = new Element();
 GasStation.prototype = new Element();
 Tree.prototype = new Element();
+River.prototype = new Element();
+RiverBridge.prototype = new Element();

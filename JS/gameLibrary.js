@@ -187,6 +187,8 @@ function GameCanvas() {
             case(5): return new River(pos);
             case(6): return new Traffic(pos);
             case(7): return new Tree(pos);
+            case(8): return new River(pos);
+            case(9): return new RiverBridge(pos);
             default:
                 throw new Error("CRITICAL: Unable to match int to BlockType (" + i +")");
                 return null;   //Will throw error
@@ -207,9 +209,8 @@ function GameCanvas() {
         }
 
         for(var i = 0; i < grid.length; i++) {
-            if(grid[i].className == "road") {
+            if(grid[i].className == "road" || grid[i].className == "river") {
                 var sur = GetDirectSurroundings(i);
-
 
                 /*
                             7
@@ -228,7 +229,7 @@ function GameCanvas() {
                     if(isNaN( sur[indexes[j]] )) {
                         tmp[j] = -1;
                     }else{
-                        if(grid[sur[indexes[j]]].className == "road"){
+                        if(grid[sur[indexes[j]]].className == grid[i].className){
                             tmp[j] = 1;
                         }else{
                             tmp[j] = 0;
