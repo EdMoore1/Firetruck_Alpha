@@ -186,6 +186,7 @@ function GameCanvas() {
             case(4): return new GasStation(pos);
             case(5): return new River(pos);
             case(6): return new Traffic(pos);
+            case(7): return new Tree(pos);
             default:
                 throw new Error("CRITICAL: Unable to match int to BlockType (" + i +")");
                 return null;   //Will throw error

@@ -24,7 +24,6 @@ function Element(position) {
 	this.onFire = null;
 	this.timeLeft = null;
 	this.health = null;
-	this.color = null;
 	this.originalColor = null;
 	this.x = null;
 	this.y = null;
@@ -40,7 +39,6 @@ function Element(position) {
 		this.onFire = false;
 		this.timeLeft = this.time;
 		this.health = 60;
-		this.originalColor = this.color;
 		this.x = Math.floor( (position*GameCanvas.blockSize)%(GameCanvas.canvasWidth) );
 		this.y = ( Math.floor((position*GameCanvas.blockSize)/(GameCanvas.canvasWidth))*GameCanvas.blockSize );
 		this.highlighted = false;
@@ -57,7 +55,6 @@ function Element(position) {
 
 	this.update = function(spray) {
 		if(this.onFire && this.health <= 0) {
-			this.color = ColorRubble;			//change sprite to burnt down
 			this.flammable = 0;					//change flammable to 0
 			this.onFire = false;				//change onFire to 0
 			this.height = 1;					//change height to 1 ( so trucks cannot drive over it )
@@ -65,7 +62,6 @@ function Element(position) {
 		else if(this.onFire && this.timeLeft <= 0)
 		{
 			this.onFire = false;				//change sprite to not on fire
-			this.color = this.originalColor;	//change onFire to 0
 		}
 		if(this.onFire) this.health--;
 	}
@@ -76,13 +72,12 @@ function Element(position) {
 }
 Element.prototype.burn = function () { 
 	if(this.flammable > 0) {
-		this.color = ColorFire;
 		this.img.src = "images/sprites/fire.png";
 		this.onFire = true;
 	}
 }
-Element.prototype.highlight = function () { this.highlighted = true; this.color = ColorHighlighted; }
-Element.prototype.unHighlight = function () { this.color = this.originalColor; this.highlighted = false; }
+Element.prototype.highlight = function () { this.highlighted = true; }
+Element.prototype.unHighlight = function () { this.highlighted = false; }
 Element.prototype.repaint = function(canvas) {
 
 	if(this.sprite == "")
@@ -96,7 +91,6 @@ Element.prototype.repaint = function(canvas) {
 		canvas.fillRect(this.x, this.y, GameCanvas.blockSize, GameCanvas.blockSize);
 		
 		if(this.highlighted || this.onFire) {
-			canvas.fillStyle = this.color;
 			canvas.fillRect(this.x+1, this.y+1, GameCanvas.blockSize-2, GameCanvas.blockSize-2);
 		}else
 			canvas.drawImage(this.img, this.x+1, this.y+1, GameCanvas.blockSize-2, (GameCanvas.blockSize-2) * (this.img.height / this.img.width));
@@ -105,15 +99,18 @@ Element.prototype.repaint = function(canvas) {
 		canvas.font="10px Arial";
 		canvas.fillText(this.ID,this.x,this.y+9);
 	}else {
-		if(this.highlighted) {
-			canvas.fillStyle = this.color;
-			canvas.fillRect(this.x, this.y, GameCanvas.blockSize, GameCanvas.blockSize);
-		}else
-        	canvas.drawImage(this.img, this.x, this.y, GameCanvas.blockSize, GameCanvas.blockSize * (this.img.height / this.img.width));
+        canvas.drawImage(this.img, this.x, this.y, GameCanvas.blockSize, GameCanvas.blockSize * (this.img.height / this.img.width));
 
         if(this.onFire) {
 			this.img.src = "images/sprites/fire.png";
 			canvas.drawImage(this.img, this.x, this.y, GameCanvas.blockSize, GameCanvas.blockSize * (this.img.height / this.img.width));
+		}
+
+		if(this.highlighted) {
+			canvas.fillStyle = ColorHighlighted;
+			canvas.globalAlpha=0.5;
+			canvas.fillRect(this.x, this.y, GameCanvas.blockSize, GameCanvas.blockSize);
+			canvas.globalAlpha=1.0;
 		}
 	}
 }
@@ -123,38 +120,30 @@ Element.prototype.repaint = function(canvas) {
 function Building() {
 	this.typeInit = function() {
 		this.className = "building";
-		this.color = ColorBuilding;
 		this.height = Math.floor(Math.random() * 10) + 1;
 		this.flammable = Math.random() * 0.010 + 0.005;
-		this.sprite = "";
 	}
 }
 
 function Grass() {
 	this.typeInit = function() {
 		this.className = "grass";
-		this.color = ColorGrass;
 		this.height = 0;
 		this.flammable = Math.random() * 0.005 + 0.0001;
-		this.sprite = "";
 	}
 }
 function FireStation() {
 	this.typeInit = function() {
 		this.className = "firestation";
-		this.color = ColorFireStation;
 		this.height = 2;
 		this.flammable = 0;
-		this.sprite = "";
 	}
 }
 function Road() {
 	this.typeInit = function() {
 		this.className = "road";
-		this.color = ColorRoad;
 		this.height = 0;
 		this.flammable = 0;
-		this.sprite = "";
 	}
 
 	this.setDir = function(direction) {
@@ -165,10 +154,16 @@ function Road() {
 function GasStation() {
 	this.typeInit = function() {
 		this.className = "gasstation";
-		this.color = ColorGasStation;
 		this.height = 2;
 		this.flammable = 0.50;
-		this.sprite = "";
+	}
+}
+
+function Tree() {
+	this.typeInit = function() {
+		this.className = "tree";
+		this.height = Math.floor(Math.random()*4) + 1;
+		this.flammable = Math.random() * 0.005 + 0.0001;
 	}
 }
 
@@ -178,3 +173,4 @@ Grass.prototype = new Element();
 FireStation.prototype = new Element();
 Road.prototype = new Element();
 GasStation.prototype = new Element();
+Tree.prototype = new Element();

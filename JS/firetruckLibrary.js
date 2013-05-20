@@ -6,6 +6,8 @@ function FireTruck(Path) {
     this.sprite = "sprites/fireTruck01.gif";
     this.color = 'rgb(0,0,0)';
     this.Pos = Path[0];
+    this.img = new Image();
+    this.img.src = "images/sprites/firetruck.png";
 
     FireTruck.prototype.Move = function() {
         var found = false;
@@ -67,8 +69,9 @@ function FireTruck(Path) {
         var x = Math.floor( (this.Pos*GameCanvas.blockSize)%(GameCanvas.canvasWidth) );
         var y = ( Math.floor((this.Pos*GameCanvas.blockSize)/(GameCanvas.canvasWidth))*GameCanvas.blockSize );
 
+        canvas.drawImage(this.img, x, y, GameCanvas.blockSize, GameCanvas.blockSize * (this.img.height / this.img.width));
 
-        canvas.fillStyle = this.color;
-        canvas.fillRect(x, y, GameCanvas.blockSize, GameCanvas.blockSize);
+        // canvas.fillStyle = this.color;
+        // canvas.fillRect(x, y, GameCanvas.blockSize, GameCanvas.blockSize);
     };
 }
