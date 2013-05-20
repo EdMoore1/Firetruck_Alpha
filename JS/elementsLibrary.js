@@ -92,7 +92,11 @@ Element.prototype.repaint = function(canvas) {
 		canvas.fillStyle = "rgb(0,0,0);";
 		canvas.fillRect(this.x, this.y, GameCanvas.blockSize, GameCanvas.blockSize);
 		
-		canvas.drawImage(this.img, this.x+1, this.y+1, GameCanvas.blockSize-2, (GameCanvas.blockSize-2) * (this.img.height / this.img.width));
+		if(this.highlighted || this.onFire) {
+			canvas.fillStyle = this.color;
+			canvas.fillRect(this.x+1, this.y+1, GameCanvas.blockSize-2, GameCanvas.blockSize-2);
+		}else
+			canvas.drawImage(this.img, this.x+1, this.y+1, GameCanvas.blockSize-2, (GameCanvas.blockSize-2) * (this.img.height / this.img.width));
 
 		canvas.fillStyle = "rgb(0,0,0);";
 		canvas.font="10px Arial";

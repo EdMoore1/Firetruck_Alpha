@@ -88,54 +88,54 @@ function GameCanvas() {
         */
 
         if(!farLeft && !inrLeft)
-            arr.push(position-2-lineOffset*2);  //0
+            arr[0] = (position-2-lineOffset*2);  //0
         if(!farLeft)
-            arr.push(position-1-lineOffset*2);  //1
-        arr.push(position-0-lineOffset*2);  //2
+            arr[1] = (position-1-lineOffset*2);  //1
+        arr[2] = (position-0-lineOffset*2);  //2
         if(!farRght)
-            arr.push(position+1-lineOffset*2);  //3
+            arr[3] = (position+1-lineOffset*2);  //3
         if(!farRght && !inrRght)
-            arr.push(position+2-lineOffset*2);  //4
+            arr[4] = (position+2-lineOffset*2);  //4
 
         if(!farLeft && !inrLeft)
-            arr.push(position-2-lineOffset*1);  //5
+            arr[5] = (position-2-lineOffset*1);  //5
         if(!farLeft)
-            arr.push(position-1-lineOffset*1);  //6
-        arr.push(position-0-lineOffset*1);  //7
+            arr[6] = (position-1-lineOffset*1);  //6
+        arr[7] = (position-0-lineOffset*1);  //7
         if(!farRght)
-            arr.push(position+1-lineOffset*1);  //8
+            arr[8] = (position+1-lineOffset*1);  //8
         if(!farRght && !inrRght)
-            arr.push(position+2-lineOffset*1);  //9
+            arr[9] = (position+2-lineOffset*1);  //9
 
         if(!farLeft && !inrLeft)
-            arr.push(position-2-lineOffset*0);  //0
+            arr[10] = (position-2-lineOffset*0);  //0
         if(!farLeft)
-            arr.push(position-1-lineOffset*0);  //1
+            arr[11] = (position-1-lineOffset*0);  //1
                         /**/
         if(!farRght)
-            arr.push(position+1-lineOffset*0);  //2
+            arr[12] = (position+1-lineOffset*0);  //2
         if(!farRght && !inrRght)
-            arr.push(position+2-lineOffset*0);  //3
+            arr[13] = (position+2-lineOffset*0);  //3
 
         if(!farLeft && !inrLeft)
-            arr.push(position-2+lineOffset*1);  //4
+            arr[14] = (position-2+lineOffset*1);  //4
         if(!farLeft)
-            arr.push(position-1+lineOffset*1);  //5
-        arr.push(position-0+lineOffset*1);  //6
+            arr[15] = (position-1+lineOffset*1);  //5
+        arr[16] = (position-0+lineOffset*1);  //6
         if(!farRght)
-            arr.push(position+1+lineOffset*1);  //7
+            arr[17] = (position+1+lineOffset*1);  //7
         if(!farRght && !inrRght)
-            arr.push(position+2+lineOffset*1);  //8
+            arr[18] = (position+2+lineOffset*1);  //8
 
         if(!farLeft && !inrLeft)
-            arr.push(position-2+lineOffset*2);  //9
+            arr[19] = (position-2+lineOffset*2);  //9
         if(!farLeft)
-            arr.push(position-1+lineOffset*2);  //0
-        arr.push(position-0+lineOffset*2);  //1
+            arr[20] = (position-1+lineOffset*2);  //0
+        arr[21] = (position-0+lineOffset*2);  //1
         if(!farRght)
-            arr.push(position+1+lineOffset*2);  //2
+            arr[22] = (position+1+lineOffset*2);  //2
         if(!farRght && !inrRght)
-            arr.push(position+2+lineOffset*2);  //3
+            arr[23] = (position+2+lineOffset*2);  //3
 
         //Check the top and bot boundries
         for(i = 0; i < arr.length; i++) {
@@ -235,12 +235,15 @@ function GameCanvas() {
                     }
                 }
 
-                if(i == 128)
-                    console.log(sur);
-
-
-
-                if(tmp[0] == 1 && tmp[2] == 1)
+                if(tmp[0] == 1 && tmp[3] == 1 && tmp[2] == 1)
+                    grid[i].setDir("t1");
+                else if(tmp[0] == 1 && tmp[1] == 1 && tmp[2] == 1)
+                    grid[i].setDir("t2");
+                else if(tmp[1] == 1 && tmp[3] == 1 && tmp[2] == 1)
+                    grid[i].setDir("t4");
+                else if(tmp[0] == 1 && tmp[3] == 1 && tmp[2] == 1)
+                    grid[i].setDir("t3");
+                else if(tmp[0] == 1 && tmp[2] == 1)
                     grid[i].setDir("c1");
                 else if(tmp[0] == 1 && tmp[1] == 1)
                     grid[i].setDir("c2");
@@ -254,79 +257,6 @@ function GameCanvas() {
                     grid[i].setDir("v1");
                 else
                     console.log("Error assigning road #: " + i +"("+ tmp +")");
-/*
-                
-                //TopLeft
-                if(isNaN(sur[7]) && isNaN(sur[11])) {
-                    if(grid[sur[12]].className == "road" && grid[sur[16]].className == "road")
-                        grid[i].setDir("C2");
-                    else if(grid[sur[16]].className == "road")
-                        grid[i].setDir("V1");
-                    else if(grid[sur[12]].className == "road")
-                        grid[i].setDir("H1");
-                }
-                //TopRight
-                else if(isNaN(sur[7]) && isNaN(sur[12])) {
-                    if(grid[sur[11]].className == "road" && grid[sur[16]].className == "road")
-                        grid[i].setDir("C3");
-                    else if(grid[sur[16]].className == "road")
-                        grid[i].setDir("V1");
-                    else if(grid[sur[11]].className == "road")
-                        grid[i].setDir("H1");
-                }
-                //BottomLeft
-                else if(isNaN(sur[16]) && isNaN(sur[11])) {
-                    if(grid[sur[12]].className == "road" && grid[sur[7]].className == "road")
-                        grid[i].setDir("C1");
-                    else if(grid[sur[7]].className == "road")
-                        grid[i].setDir("V1");
-                    else if(grid[sur[12]].className == "road")
-                        grid[i].setDir("H1");
-                }
-                //BottomRight
-                else if(isNaN(sur[16]) && isNaN(sur[12])) {
-                    if(grid[sur[11]].className == "road" && grid[sur[7]].className == "road")
-                        grid[i].setDir("C4");
-                    else if(grid[sur[7]].className == "road")
-                        grid[i].setDir("V1");
-                    else if(grid[sur[11]].className == "road")
-                        grid[i].setDir("H1");
-                }
-                //TopRow
-                else if(isNaN(sur[7])) {
-                    if(grid[sur[16]].className == "road" && grid[sur[11]].className != "road" && grid[sur[12]].className != "road")
-                        grid[i].setDir("V1");
-                    else if(grid[sur[16]].className == "road" && grid[sur[11]].className == "road")
-                        grid[i].setDir("C2");
-                    else if(grid[sur[16]].className == "road" && grid[sur[12]].className == "road")
-                        grid[i].setDir("C3");
-                    else if(grid[sur[11]].className == "road" || grid[sur[12]].className == "road")
-                        grid[i].setDir("H1");
-                }
-                //BotRow
-                else if(isNaN(sur[16])) {
-                    if(grid[sur[7]].className == "road" && grid[sur[11]].className != "road" && grid[sur[12]].className != "road")
-                        grid[i].setDir("V1");
-                    else if(grid[sur[7]].className == "road" && grid[sur[11]].className == "road")
-                        grid[i].setDir("C2");
-                    else if(grid[sur[7]].className == "road" && grid[sur[12]].className == "road")
-                        grid[i].setDir("C3");
-                    else if(grid[sur[11]].className == "road" || grid[sur[12]].className == "road")
-                        grid[i].setDir("H1");
-                }
-                //LeftCol
-                else if(isNaN(sur[11])) {
-                    if(grid[sur[7]].className == "road" && grid[sur[11]].className != "road" && grid[sur[12]].className != "road")
-                        grid[i].setDir("V1");
-                    else if(grid[sur[7]].className == "road" && grid[sur[11]].className == "road")
-                        grid[i].setDir("C2");
-                    else if(grid[sur[7]].className == "road" && grid[sur[12]].className == "road")
-                        grid[i].setDir("C3");
-                    else if(grid[sur[11]].className == "road" || grid[sur[12]].className == "road")
-                        grid[i].setDir("H1");
-                }
-                //RightCol
-*/
             }
         }
 
