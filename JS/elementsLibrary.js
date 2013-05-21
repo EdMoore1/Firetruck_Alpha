@@ -29,10 +29,11 @@ function Element(position) {
 	this.y = null;
 	this.type = null;
 	this.highlighted = null;
-	this.img = new Image();
+	this.img;
 
 	this.init = function(position) {
 		this.typeInit();
+		this.img = new Image();
 
 		this.ID = position;
 		this.time = Math.ceil(this.flammable*(this.height+1)*TimeScalar);
@@ -80,10 +81,10 @@ Element.prototype.highlight = function () { this.highlighted = true; }
 Element.prototype.unHighlight = function () { this.highlighted = false; }
 Element.prototype.repaint = function(canvas) {
 
-	if(this.sprite == "")
-		this.img.src = "images/sprites/" + this.className +".jpg";
-	else
-		this.img.src = "images/sprites/" + this.className +"_"+ this.sprite +".jpg";
+	// if(this.sprite == "")
+		// this.img.src = "images/sprites/" + this.className +".jpg";
+	// else
+		// this.img.src = "images/sprites/" + this.className +"_"+ this.sprite +".jpg";
 
 	//Debugging
 	if( Debugging ) {
