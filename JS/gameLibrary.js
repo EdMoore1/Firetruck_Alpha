@@ -415,7 +415,8 @@ function GameCanvas() {
 
     /* ACTION CODE */
     var createActionTimer = function() {
-        var timer = setInterval( function() {
+        clearInterval(GameCanvas.timer);
+        GameCanvas.timer = setInterval( function() {
             if (!(dragging && PAUSE_WHILE_DRAGGING)) {
                 var i, j;
                 var foundTarget = false;
