@@ -1,28 +1,13 @@
 <html>
 <head>
 	<script src="js/jQuery.js" type="text/javascript"></script>
-	<script src="js/jquery.anythingslider.js" type="text/javascript"></script>
+	<script src="js/jquery.nivo.slider.pack.js" type="text/javascript"></script>
 	<script src="js/levels.js" type="text/javascript"></script>
 	<script src="js/gameLibrary.js" type="text/javascript"></script>
 	<script src="js/elementsLibrary.js" type="text/javascript"></script>
 	<script src="js/firetruckLibrary.js" type="text/javascript"></script>
 	<script src="js/newsLibrary.js" type="text/javascript"></script>
-	<link rel="stylesheet" type="text/css" href="css/anythingslider.css" />
 	<link rel="stylesheet" type="text/css" href="css/style.css" />
-	<script type="text/javascript">
-		$(document).ready(function() {
-			$('#slider').anythingSlider({
-				buildArrows: false,
-				buildNavigation: false,
-				buildStartStop: false,
-				enableKeyboard: false
-			});
-		});
-
-		function load(num) {
-
-		}
-	</script>
 </head>
 
 <body>
@@ -31,34 +16,47 @@
 		<h1>Title <span>Slogan</span></h1>
 
 		<ul id="menu">
-			<a href="#&panel1-1"><li>Home</li></a>
-			<a href="#&panel1-2"><li>About</li></a>
-			<a href="#&panel1-3"><li>Game</li></a>
-			<a href="#&panel1-4"><li>Credits</li></a>
+			<a href="#" onClick="load(0);"><li>Home</li></a>
+			<a href="#" onClick="load(1);"><li>About</li></a>
+			<a href="#" onClick="load(2);"><li>Game</li></a>
+			<a href="#" onClick="load(3);"><li>Credits</li></a>
 		</ul>
 
-		<ul id="slider">
+        <div id="slider" class="nivoSlider">
 			<!-- Home Content -->
-			<li id="homeContent">
+			<div id="homeContent">
 				Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque vel euismod nibh. Cras suscipit lectus ut dui dictum sit amet vehicula nulla pretium. Aliquam eget orci urna. Sed lectus lorem, condimentum nec suscipit sit amet, varius in felis. Nam libero dolor, pharetra sed adipiscing ut, lacinia at nulla. Donec sapien tellus, ultricies at dignissim a, fermentum et metus. Vivamus sed nunc in turpis sagittis ornare. Aliquam erat volutpat. Cras sodales consectetur ligula, vel porttitor arcu suscipit id. Aliquam feugiat lorem ut odio commodo fringilla. Nam ligula dolor, elementum non scelerisque eu, iaculis id diam. Mauris in nibh sed lectus varius suscipit vel a est. Praesent at augue ante, et sollicitudin libero. Integer ultrices, nunc a adipiscing suscipit, eros libero pellentesque nibh, non cursus nibh dolor et lacus. Nam varius suscipit tempus.
-			</li>
+			</div>
 
-			<li id="aboutContent">
+			<div id="aboutContent">
 				Nunc ante odio, sagittis sit amet ullamcorper vel, feugiat nec est. Suspendisse dapibus, ante a lobortis pulvinar, dui ante imperdiet metus, id placerat erat neque nec metus. Donec ultricies aliquam purus vel ornare. Nunc cursus tempor diam in semper. Donec porttitor malesuada ligula imperdiet ornare. Curabitur commodo, leo in viverra vestibulum, tellus risus pellentesque nulla, blandit semper nisl eros et ante. Quisque libero enim, egestas cursus euismod sit amet, molestie id purus. Quisque ornare, magna cursus aliquam egestas, libero risus porttitor est, non auctor sapien erat quis est.
-			</li>
+			</div>
 
-			<li id="GameContent">
+			<div id="gameContent">
 				Proin aliquam imperdiet erat, eu lobortis lorem cursus nec. Fusce ligula tortor, facilisis ac vestibulum et, condimentum vitae purus. Donec et sem diam, a pulvinar lectus. Aenean egestas lorem et eros faucibus feugiat. Maecenas consequat, ante ac vestibulum suscipit, quam neque pretium leo, vel scelerisque dui tortor ut nibh. Ut sed arcu mi, sed congue ligula. Ut sit amet bibendum risus. Donec viverra ornare felis sed bibendum. In id velit vitae ante adipiscing viverra et sed ligula. Sed luctus nisl et orci porttitor nec facilisis nibh interdum.
-			</li>
+			</div>
 
 			<div id="creditsContent">
-
+				Some Content here too
 			</div>
-		</ul>
+		</div>
 
 		<div id="footer">
 			&copy; 2013 MacICT, Macquarie University
 		</div>
 	</div>
+
+	<script type="text/javascript">
+		function load(num) {
+			var arr = ["homeContent", "aboutContent", "gameContent", "creditsContent"];
+
+			for(var i in arr)
+				if($("#"+arr[i]).css("display") != "none")
+					$("#"+arr[i]).fadeOut(300, function(){
+						$("#"+arr[num]).fadeIn(300);
+					});
+
+		}
+	</script>
 </body>
 </html>
