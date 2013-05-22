@@ -19,6 +19,14 @@ function GameCanvas() {
     var fireFrequency = 30;
     var img = new Image();
     var currentLevel = 0;
+    var news;
+
+    //Loading Bar Variables
+    var LOADING_BAR_WIDTH = 800;
+    var LOADING_BAR_HEIGHT = 30;
+    var LOADING_BAR_X = 112;
+    var LOADING_BAR_Y = 600;
+    var LOADING_BAR_COLOR = 'rgb(255,126,0)';
 
     //Core Variables
     var grid = initLevel.slice(0);
@@ -202,6 +210,7 @@ function GameCanvas() {
     var start = function () {
         var level = GameCanvas.levels[currentLevel]['level'].slice(0);
         maxTrucks = GameCanvas.levels[currentLevel]['trucks'];
+        news = new NewsFeed();
 
         for(var i = 0; i < level.length; i++) {
             grid[i] = intToBlock(level[i], i);
@@ -287,6 +296,68 @@ function GameCanvas() {
         //
     }
 
+    GameCanvas.prototype.Setup = function() {
+        var preLoadedImages = [
+            'images/sprites/building.jpg',
+            'images/sprites/fire.png',
+            'images/sprites/Firestation.jpg',
+            'images/sprites/firetruck.png',
+            'images/sprites/grass.jpg',
+            'images/sprites/river_b_h1.jpg',
+            'images/sprites/river_b_v1.jpg',
+            'images/sprites/river_c1.jpg',
+            'images/sprites/river_c2.jpg',
+            'images/sprites/river_c3.jpg',
+            'images/sprites/river_c4.jpg',
+            'images/sprites/river_h1.jpg',
+            'images/sprites/river_v1.jpg',
+            'images/sprites/road_c1.jpg',
+            'images/sprites/road_c2.jpg',
+            'images/sprites/road_c3.jpg',
+            'images/sprites/road_c4.jpg',
+            'images/sprites/road_h1.jpg',
+            'images/sprites/road_t1.jpg',
+            'images/sprites/road_t2.jpg',
+            'images/sprites/road_t3.jpg',
+            'images/sprites/road_t4.jpg',
+            'images/sprites/road_v1.jpg',
+            'images/sprites/road_vert.jpg',
+            'images/sprites/road_x1.jpg',
+            'images/sprites/road.jpg',
+            'images/sprites/tree.jpg',
+            'images/victory.jpg',
+            ''  //Required for hack
+        ];
+        var count = 0;
+
+        //Show the loading page
+        var loadingImg = new Image();
+        var temp = new Image();
+        loadingImg.src = 'images/loading.jpg';
+        canvas.drawImage(loadingImg, 0, 0, GameCanvas.canvasWidth, GameCanvas.canvasHeight);
+
+        //Draw the loadingBar
+        for(var i in preLoadedImages) {
+            //Border
+            canvas.fillStyle = LOADING_BAR_COLOR;
+            canvas.lineWidth = 1;
+            // canvas.fillRect(LOADING_BAR_X-1, LOADING_BAR_Y-1, LOADING_BAR_WIDTH+2, LOADING_BAR_HEIGHT+2);
+            canvas.rect(LOADING_BAR_X-1, LOADING_BAR_Y-1, LOADING_BAR_WIDTH+2, LOADING_BAR_HEIGHT+2);
+            canvas.strokeStyle = 'rgb(0,0,0)';
+            canvas.stroke();
+            //Bar
+            canvas.fillRect(LOADING_BAR_X, LOADING_BAR_Y, LOADING_BAR_WIDTH * Math.ceil(count/preLoadedImages.length), LOADING_BAR_HEIGHT);
+
+            temp.src = preLoadedImages[i];
+            count++;
+        }
+
+        setTimeout(function(){
+            createActionTimer();
+            start();
+        }, 600);
+    }
+
 
 
 
@@ -297,7 +368,6 @@ function GameCanvas() {
 
 
     //Methods (public)
-    GameCanvas.prototype.start = function (levelArr, trucks) { start(levelArr, trucks); }
     GameCanvas.prototype.repaint = function () { GameCanvas.repaint(); };
 
     GameCanvas.repaint = function () {
@@ -344,114 +414,115 @@ function GameCanvas() {
 
 
     /* ACTION CODE */
+    var createActionTimer = function() {
+        var timer = setInterval( function() {
+            if (!(dragging && PAUSE_WHILE_DRAGGING)) {
+                var i, j;
+                var foundTarget = false;
+                var toBurn = Array();
+                var burnCount;
+                var burnTarget = -1;
+                
 
-    var timer = setInterval( function() {
-        if (!(dragging && PAUSE_WHILE_DRAGGING)) {
-            var i, j;
-            var foundTarget = false;
-            var toBurn = Array();
-            var burnCount;
-            var burnTarget = -1;
-            
-
-            //Evaluate burn conditions
-            //May need optimisation
-            for(i in grid) {
-                if (grid[i].onFire) {
-                    var sur = GetFurtherSurroundings(grid[i].ID);
-                    burnCount = 0;
-                    for(j in sur) {
-                        if( grid[sur[j]].flammable != 0 && 
-                            ([0,1,2,3,4,5,10,13,14,,18,19,20,21,22,23].indexOf(j) >= 0 && (Math.random() < (grid[sur[j]].flammable/DIST_SCALAR)) ||
-                            (Math.random() < grid[sur[j]].flammable)))
-                            if(burnCount++ < MAX_BURN_COUNT)
-                                toBurn.push(sur[j]);
-                    }
-            } }
-
-            //Update all the tiles
-            for(i in grid) {
-                grid[i].update();
-                grid[i].repaint(canvas);
-            }
-
-            //Truck operations
-            for(i in trucks) {
-                if( trucks[i].Stopped == true ) {
-                    trucks[i].Repaint(canvas);
-                    var sur = GetSurroundings(trucks[i].last());
-                    for(j in sur) {
-
-                        if(!foundTarget && !isNaN(sur[j]) && grid[sur[j]].onFire) {
-                            foundTarget = true;
-                            grid[sur[j]].sprayed();
+                //Evaluate burn conditions
+                //May need optimisation
+                for(i in grid) {
+                    if (grid[i].onFire) {
+                        var sur = GetFurtherSurroundings(grid[i].ID);
+                        burnCount = 0;
+                        for(j in sur) {
+                            if( grid[sur[j]].flammable != 0 && 
+                                ([0,1,2,3,4,5,10,13,14,,18,19,20,21,22,23].indexOf(j) >= 0 && (Math.random() < (grid[sur[j]].flammable/DIST_SCALAR)) ||
+                                (Math.random() < grid[sur[j]].flammable)))
+                                if(burnCount++ < MAX_BURN_COUNT)
+                                    toBurn.push(sur[j]);
                         }
+                } }
+
+                //Update all the tiles
+                for(i in grid) {
+                    grid[i].update();
+                    grid[i].repaint(canvas);
+                }
+
+                //Truck operations
+                for(i in trucks) {
+                    if( trucks[i].Stopped == true ) {
+                        trucks[i].Repaint(canvas);
+                        var sur = GetSurroundings(trucks[i].last());
+                        for(j in sur) {
+
+                            if(!foundTarget && !isNaN(sur[j]) && grid[sur[j]].onFire) {
+                                foundTarget = true;
+                                grid[sur[j]].sprayed();
+                            }
+                        }
+                    }else{
+                        trucks[i].Move();
+                        trucks[i].Repaint(canvas);
+                        // if(trucks[i].last() != null && !trucks[i].stopped)
+                            // grid[trucks[i].last()].repaint(canvas);
                     }
-                }else{
-                    trucks[i].Move();
-                    trucks[i].Repaint(canvas);
-                    // if(trucks[i].last() != null && !trucks[i].stopped)
-                        // grid[trucks[i].last()].repaint(canvas);
                 }
-            }
 
 
-            if(time%fireFrequency == 0) {
-                while(burnTarget < 0 || grid[burnTarget].flammable == 0) {
-                    burnTarget = Math.floor(Math.random() * grid.length);
-                    for(i in trucks)
-                        if(trucks[i].Pos == burnTarget)
-                            burnTarget = -1;
+                if(time%fireFrequency == 0) {
+                    while(burnTarget < 0 || grid[burnTarget].flammable == 0) {
+                        burnTarget = Math.floor(Math.random() * grid.length);
+                        for(i in trucks)
+                            if(trucks[i].Pos == burnTarget)
+                                burnTarget = -1;
+                    }
+                    toBurn.push(burnTarget);
                 }
-                toBurn.push(burnTarget);
-            }
 
-            //Dont burn tiles that a truck is on
-            for(i in trucks)
-                for(j in toBurn)
-                    if(trucks[i].Pos == toBurn[j])
-                        delete toBurn[j];
+                //Dont burn tiles that a truck is on
+                for(i in trucks)
+                    for(j in toBurn)
+                        if(trucks[i].Pos == toBurn[j])
+                            delete toBurn[j];
 
-            //Burn the tiles required
-            for(i in toBurn) {
-                grid[toBurn[i]].burn();
-                grid[toBurn[i]].repaint(canvas);
-            }
-
-            //Evaluate win conditions
-            var noFires = true;
-            for(i in grid) {
-                if(grid[i].onFire) {
-                    noFires = false;
-                    break;
+                //Burn the tiles required
+                for(i in toBurn) {
+                    grid[toBurn[i]].burn();
+                    grid[toBurn[i]].repaint(canvas);
                 }
+
+                //Evaluate win conditions
+                var noFires = true;
+                for(i in grid) {
+                    if(grid[i].onFire) {
+                        noFires = false;
+                        break;
+                    }
+                }
+
+                if(noFires) {
+                    end(true);
+                }
+
+                //Increment the timer
+                var mins = Math.floor(time/60);
+                var secs = Math.floor(time%60);
+
+                //Clean up the time
+                if(secs < 10) 
+                    secs = "0" + secs;
+
+
+                document.getElementById("timer").innerHTML = mins +":"+ secs;
+                time++;
             }
-
-            if(noFires) {
-                end(true);
-            }
-
-            //Increment the timer
-            var mins = Math.floor(time/60);
-            var secs = Math.floor(time%60);
-
-            //Clean up the time
-            if(secs < 10) 
-                secs = "0" + secs;
+        }, 1000);
 
 
-            document.getElementById("timer").innerHTML = mins +":"+ secs;
-            time++;
-        }
-    }, 1000);
-
-
-    c.addEventListener("mousedown", MouseDownHandler, false);
-    c.addEventListener("mouseup", MouseUpHandler, false);
-    c.addEventListener("mousemove", MouseMoveHandler, false);
-    c.addEventListener("touchstart", MouseDownHandler, false);
-    c.addEventListener("touchend", MouseUpHandler, false);
-    c.addEventListener("touchmove", MouseMoveHandler, false);
+        c.addEventListener("mousedown", MouseDownHandler, false);
+        c.addEventListener("mouseup", MouseUpHandler, false);
+        c.addEventListener("mousemove", MouseMoveHandler, false);
+        c.addEventListener("touchstart", MouseDownHandler, false);
+        c.addEventListener("touchend", MouseUpHandler, false);
+        c.addEventListener("touchmove", MouseMoveHandler, false);
+    }
 
     function MouseDownHandler(e) {
         var index = CalculateIndex(e.pageX, e.pageY);
