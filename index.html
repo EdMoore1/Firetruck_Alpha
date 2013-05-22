@@ -18,8 +18,9 @@
 		<ul id="menu">
 			<a href="#" onClick="load(0);"><li>Home</li></a>
 			<a href="#" onClick="load(1);"><li>About</li></a>
-			<a href="#" onClick="load(2);"><li>Game</li></a>
-			<a href="#" onClick="load(3);"><li>Credits</li></a>
+			<a href="#" onClick="load(2);"><li>Story</li></a>
+			<a href="#" onClick="load(3);"><li>Game</li></a>
+			<a href="#" onClick="load(4);"><li>Credits</li></a>
 		</ul>
 
         <div id="slider" class="nivoSlider">
@@ -32,8 +33,14 @@
 				Nunc ante odio, sagittis sit amet ullamcorper vel, feugiat nec est. Suspendisse dapibus, ante a lobortis pulvinar, dui ante imperdiet metus, id placerat erat neque nec metus. Donec ultricies aliquam purus vel ornare. Nunc cursus tempor diam in semper. Donec porttitor malesuada ligula imperdiet ornare. Curabitur commodo, leo in viverra vestibulum, tellus risus pellentesque nulla, blandit semper nisl eros et ante. Quisque libero enim, egestas cursus euismod sit amet, molestie id purus. Quisque ornare, magna cursus aliquam egestas, libero risus porttitor est, non auctor sapien erat quis est.
 			</div>
 
-			<div id="gameContent">
+			<div id="storyContent">
 				Proin aliquam imperdiet erat, eu lobortis lorem cursus nec. Fusce ligula tortor, facilisis ac vestibulum et, condimentum vitae purus. Donec et sem diam, a pulvinar lectus. Aenean egestas lorem et eros faucibus feugiat. Maecenas consequat, ante ac vestibulum suscipit, quam neque pretium leo, vel scelerisque dui tortor ut nibh. Ut sed arcu mi, sed congue ligula. Ut sit amet bibendum risus. Donec viverra ornare felis sed bibendum. In id velit vitae ante adipiscing viverra et sed ligula. Sed luctus nisl et orci porttitor nec facilisis nibh interdum.
+			</div>
+
+			<div id="gameContent">
+				<div id="points" width="1024px" height="30px"><div id="timer">0:00</div></div>
+				<canvas id="game" width="1024px" height="640px"></canvas>
+				<canvas id="news" width="1024px" height="20px"></canvas>
 			</div>
 
 			<div id="creditsContent">
@@ -48,7 +55,20 @@
 
 	<script type="text/javascript">
 		function load(num) {
-			var arr = ["homeContent", "aboutContent", "gameContent", "creditsContent"];
+			var arr = ["homeContent", "aboutContent", "storyContent", "gameContent", "creditsContent"];
+			//TODO: Check if mobile
+			var mobile = false;
+
+			if(num == 3 && mobile){
+				//TODO: Redirect to game by itself
+			}else if(num == 3){
+				//Initialise the game
+				var game = new GameCanvas(levels);
+				game.start(levels, 3);
+				game.repaint();
+				var news = new NewsFeed();
+				news.start();
+			}
 
 			for(var i in arr)
 				if($("#"+arr[i]).css("display") != "none")
