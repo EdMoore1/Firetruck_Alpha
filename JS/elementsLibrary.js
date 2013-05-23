@@ -73,7 +73,6 @@ function Element(position) {
 }
 Element.prototype.burn = function () { 
 	if(this.flammable > 0) {
-		this.img.src = "images/sprites/fire.png";
 		this.onFire = true;
 	}
 }
@@ -81,30 +80,36 @@ Element.prototype.highlight = function () { this.highlighted = true; }
 Element.prototype.unHighlight = function () { this.highlighted = false; }
 Element.prototype.repaint = function(canvas) {
 
-	// if(this.sprite == "")
-		// this.img.src = "images/sprites/" + this.className +".jpg";
-	// else
-		// this.img.src = "images/sprites/" + this.className +"_"+ this.sprite +".jpg";
+	var temp = new Image();
 
 	//Debugging
 	if( Debugging ) {
 		canvas.fillStyle = "rgb(0,0,0);";
 		canvas.fillRect(this.x, this.y, GameCanvas.blockSize, GameCanvas.blockSize);
 		
-		if(this.highlighted || this.onFire) {
-			canvas.fillRect(this.x+1, this.y+1, GameCanvas.blockSize-2, GameCanvas.blockSize-2);
-		}else
-			canvas.drawImage(this.img, this.x+1, this.y+1, GameCanvas.blockSize-2, (GameCanvas.blockSize-2) * (this.img.height / this.img.width));
+		canvas.drawImage(this.img, this.x+1, this.y+1, GameCanvas.blockSize-2, (GameCanvas.blockSize-2) * (this.img.height / this.img.width));
 
-		canvas.fillStyle = "rgb(0,0,0);";
+		if(this.onFire) {
+			temp.src = "images/sprites/fire.png";
+			canvas.drawImage(temp, this.x, this.y, GameCanvas.blockSize, GameCanvas.blockSize * (this.img.height / this.img.width));
+		}
+
+		if(this.highlighted) {
+			canvas.fillStyle = ColorHighlighted;
+			canvas.globalAlpha=0.5;
+			canvas.fillRect(this.x, this.y, GameCanvas.blockSize, GameCanvas.blockSize);
+			canvas.globalAlpha=1.0;
+		}
+
+		canvas.fillStyle = "rgb(255,255,255);";
 		canvas.font="10px Arial";
-		canvas.fillText(this.ID,this.x,this.y+9);
+		canvas.fillText(this.timeLeft,this.x,this.y+9);
 	}else {
         canvas.drawImage(this.img, this.x, this.y, GameCanvas.blockSize, GameCanvas.blockSize * (this.img.height / this.img.width));
 
         if(this.onFire) {
-			this.img.src = "images/sprites/fire.png";
-			canvas.drawImage(this.img, this.x, this.y, GameCanvas.blockSize, GameCanvas.blockSize * (this.img.height / this.img.width));
+			temp.src = "images/sprites/fire.png";
+			canvas.drawImage(temp, this.x, this.y, GameCanvas.blockSize, GameCanvas.blockSize * (this.img.height / this.img.width));
 		}
 
 		if(this.highlighted) {
@@ -130,7 +135,7 @@ function Grass() {
 	this.typeInit = function() {
 		this.className = "grass";
 		this.height = 0;
-		this.flammable = Math.random() * 0.005 + 0.0001;
+		this.flammable = Math.random() * 0.004 + 0.0001;
 	}
 }
 function FireStation() {
