@@ -19,7 +19,7 @@ function GameCanvas() {
     var fireFrequency = 30;
     var img = new Image();
     var currentLevel = 0;
-    var news;
+    GameCanvas.news;
 
     //Loading Bar Variables
     var LOADING_BAR_WIDTH = 800;
@@ -210,7 +210,7 @@ function GameCanvas() {
     var start = function () {
         var level = GameCanvas.levels[currentLevel]['level'].slice(0);
         maxTrucks = GameCanvas.levels[currentLevel]['trucks'];
-        news = new NewsFeed();
+        GameCanvas.news = new NewsFeed();
 
         for(var i = 0; i < level.length; i++) {
             grid[i] = intToBlock(level[i], i);
@@ -297,6 +297,8 @@ function GameCanvas() {
     }
 
     GameCanvas.prototype.Setup = function() {
+        clearInterval(GameCanvas.timer);
+        asdfGameCanvas.news.destroy();
         var preLoadedImages = [
             'images/sprites/building.jpg',
             'images/sprites/fire.png',

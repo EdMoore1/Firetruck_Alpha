@@ -21,6 +21,11 @@ function NewsFeed() {
         newStream();
     }
 
+    NewsFeed.prototype.die = function() {
+        clearInterval(NewsFeed.timer);
+        canvas.clearRect(0,0,GameCanvas.canvasWidth,GameCanvas.canvasHeight);
+    }
+
 
     var newStream = function() {
         currentItem = Math.floor(Math.random() * items.length);
@@ -29,7 +34,7 @@ function NewsFeed() {
         writing = true;
     };
 
-    var timer = setInterval(function() {
+    NewsFeed.timer = setInterval(function() {
 
         if( writing && !GameCanvas.paused() ) {
             canvas.font="18px Arial";
