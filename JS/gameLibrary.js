@@ -280,7 +280,7 @@ function GameCanvas() {
 
     var end = function(won) {
         winCondition = false;
-        clearInterval(timer);
+        clearInterval(GameCanvas.timer);
 
 
         console.log('winnar');
@@ -352,10 +352,22 @@ function GameCanvas() {
             count++;
         }
 
-        setTimeout(function(){
-            createActionTimer();
-            start();
-        }, 600);
+        var menuImg = new Image();
+        menuImg.src = 'images/menu.jpg';
+        canvas.drawImage(menuImg, 0, 0, GameCanvas.canvasWidth, GameCanvas.canvasHeight);
+
+        //Menu Options
+        var MenuOpt = ["Play", "Load", "How to Play"];
+        canvas.fillStyle = "rgb(0,0,0);";
+        canvas.font="42px Arial";
+        for(var i in MenuOpt)
+            canvas.fillText(MenuOpt[i], 150, 250+(i*75));
+
+
+        // setTimeout(function(){
+        //     createActionTimer();
+        //     start();
+        // }, 600);
     }
 
 
