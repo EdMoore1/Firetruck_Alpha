@@ -352,22 +352,38 @@ function GameCanvas() {
             count++;
         }
 
-        var menuImg = new Image();
-        menuImg.src = 'images/menu.jpg';
-        canvas.drawImage(menuImg, 0, 0, GameCanvas.canvasWidth, GameCanvas.canvasHeight);
 
-        //Menu Options
-        var MenuOpt = ["Play", "Load", "How to Play"];
-        canvas.fillStyle = "rgb(0,0,0);";
-        canvas.font="42px Arial";
-        for(var i in MenuOpt)
-            canvas.fillText(MenuOpt[i], 150, 250+(i*75));
+        setTimeout(function(){
+            var menuImg = new Image();
+            menuImg.src = 'images/menu.jpg';
+            canvas.drawImage(menuImg, 0, 0, GameCanvas.canvasWidth, GameCanvas.canvasHeight);
 
+            //Menu Options
+            var MenuOpt = ["Play", "Load", "How to Play"];
+            canvas.fillStyle = "rgb(0,0,0);";
+            canvas.font="42px Arial";
+            for(var i in MenuOpt)
+                canvas.fillText(MenuOpt[i], 150, 250+(i*75));
 
-        // setTimeout(function(){
-        //     createActionTimer();
-        //     start();
-        // }, 600);
+            c.addEventListener("mousedown", function(e) {
+                var x = e.pageX - c.offsetLeft;
+                var y = e.pageY - c.offsetTop;
+
+                // console.log(x + ',' + y);
+                if(x >= 150 && x <= 300){
+                    if(y >= 215 && y <= 215+35) {
+                            createActionTimer();
+                            start();
+                    }else if(y >= 295 && y <= 325){
+                        console.log("Load");
+                    }else if(y >= 372 && y <= 400){
+                        // canvas.drawImage(menuImg, 0, 0, GameCanvas.canvasWidth, GameCanvas.canvasHeight);
+                        // canvas.fillText(HowToPlay_Text, )
+                        console.log("WRITE CODE HERE");
+                    }
+                }
+            }, false);
+        }, 1000);
     }
 
 
