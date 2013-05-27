@@ -13,6 +13,8 @@ var ColorFire = 'rgb(255,102,000)';
 //CONFIG
 var TimeScalar = 30;
 var Debugging = false;
+var fire = new Image();
+fire.src = "images/sprites/fire.png";
 
 
 function Element(position) {
@@ -44,10 +46,7 @@ function Element(position) {
 		this.y = ( Math.floor((position*GameCanvas.blockSize)/(GameCanvas.canvasWidth))*GameCanvas.blockSize );
 		this.highlighted = false;
 		this.sprite = "";
-		if(this.sprite == "")
-			this.img.src = "images/sprites/" + this.className +".jpg";
-		else
-			this.img.src = "images/sprites/" + this.className +"_"+ this.sprite +".jpg";
+		this.img.src = "images/sprites/" + this.className +".jpg";
 
 		return this;
 	}
@@ -80,7 +79,7 @@ Element.prototype.highlight = function () { this.highlighted = true; }
 Element.prototype.unHighlight = function () { this.highlighted = false; }
 Element.prototype.repaint = function(canvas) {
 
-	var temp = new Image();
+	// var temp = new Image();
 
 	//Debugging
 	if( Debugging ) {
@@ -90,8 +89,7 @@ Element.prototype.repaint = function(canvas) {
 		canvas.drawImage(this.img, this.x+1, this.y+1, GameCanvas.blockSize-2, (GameCanvas.blockSize-2) * (this.img.height / this.img.width));
 
 		if(this.onFire) {
-			temp.src = "images/sprites/fire.png";
-			canvas.drawImage(temp, this.x, this.y, GameCanvas.blockSize, GameCanvas.blockSize * (this.img.height / this.img.width));
+			canvas.drawImage(fire, this.x, this.y, GameCanvas.blockSize, GameCanvas.blockSize * (this.img.height / this.img.width));
 		}
 
 		if(this.highlighted) {
@@ -103,13 +101,13 @@ Element.prototype.repaint = function(canvas) {
 
 		canvas.fillStyle = "rgb(255,255,255);";
 		canvas.font="10px Arial";
-		canvas.fillText(this.timeLeft,this.x,this.y+9);
+		canvas.fillText(this.health,this.x,this.y+9);
 	}else {
         canvas.drawImage(this.img, this.x, this.y, GameCanvas.blockSize, GameCanvas.blockSize * (this.img.height / this.img.width));
 
         if(this.onFire) {
-			temp.src = "images/sprites/fire.png";
-			canvas.drawImage(temp, this.x, this.y, GameCanvas.blockSize, GameCanvas.blockSize * (this.img.height / this.img.width));
+			// temp.src = "images/sprites/fire.png";
+			canvas.drawImage(fire, this.x, this.y, GameCanvas.blockSize, GameCanvas.blockSize * (this.img.height / this.img.width));
 		}
 
 		if(this.highlighted) {
@@ -117,6 +115,11 @@ Element.prototype.repaint = function(canvas) {
 			canvas.globalAlpha=0.5;
 			canvas.fillRect(this.x, this.y, GameCanvas.blockSize, GameCanvas.blockSize);
 			canvas.globalAlpha=1.0;
+		}
+
+		if(this.health == 0) {
+			canvas.fillStyle = 'rgb(0,0,0)';
+			canvas.fillRect(this.x, this.y, GameCanvas.blockSize, GameCanvas.blockSize);
 		}
 	}
 }

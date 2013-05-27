@@ -19,6 +19,7 @@ function GameCanvas() {
     var fireFrequency = 30;
     var img = new Image();
     var currentLevel = 0;
+    var nextLevel = false;
     GameCanvas.news;
 
     //Loading Bar Variables
@@ -208,6 +209,9 @@ function GameCanvas() {
     };
 
     var start = function () {
+        createActionTimer();
+        time = 0;
+        trucks = Array();
         var level = GameCanvas.levels[currentLevel]['level'].slice(0);
         maxTrucks = GameCanvas.levels[currentLevel]['trucks'];
         GameCanvas.news = new NewsFeed();
@@ -281,19 +285,24 @@ function GameCanvas() {
     var end = function(won) {
         winCondition = false;
         clearInterval(GameCanvas.timer);
+        nextLevel = won;
 
 
-        console.log('winnar');
+        var img = new Image();
         img.src = 'images/victory.jpg';
-        console.log(img.src);
-        canvas.drawImage(img, 0,0);
 
+        img.onload = function() {
+            GameCanvas.news.destroy();
+            canvas.clearRect(0,0,GameCanvas.canvasWidth, GameCanvas.canvasHeight);
+            canvas.drawImage(img, 0,0,GameCanvas.canvasWidth, GameCanvas.canvasHeight);
+        }
 
         //Print the Victory Message
 
         //Print the Points and Time taken
 
-        //
+        //Create the handlers
+
     }
 
     GameCanvas.prototype.Setup = function() {
@@ -341,7 +350,7 @@ function GameCanvas() {
         var temp = new Image();
         loadingImg.src = 'images/loading.png';
 
-        setTimeout(function () {
+        loadingImg.onload = function () {
             canvas.drawImage(loadingImg, 0, 0, GameCanvas.canvasWidth, GameCanvas.canvasHeight);
             document.getElementById("timer").innerHTML = "";
 
@@ -360,7 +369,7 @@ function GameCanvas() {
                 temp.src = preLoadedImages[i];
                 count++;
             }
-        }, 10);
+        };
 
 
         //Load this stuff first
@@ -386,8 +395,7 @@ function GameCanvas() {
                 // console.log(x + ',' + y);
                 if(x >= 75 && x <= 200){
                     if(y >= 115 && y <= 115+35) {
-                            createActionTimer();
-                            start();
+                        start();
                     }else if(y >= 195 && y <= 225){
                         console.log("Load");
                     }else if(y >= 272 && y <= 300){
@@ -397,7 +405,7 @@ function GameCanvas() {
                     }
                 }
             }, false);
-        }, 3000);
+        }, 2000);
     }
 
 
@@ -599,37 +607,43 @@ function GameCanvas() {
         var fireCount = 0;
         e.preventDefault();
 
-        lastDragged = null;
+        if(!winCondition){
+            if(nextLevel)
+                currentLevel++;
+            start();
+        }else{
+            lastDragged = null;
 
-        //Check for a fire next to the cells (ie, Didn't skip over a solid block)
-        var surround = GetSurroundings(CalculateIndex(e.pageX, e.pageY));
+            //Check for a fire next to the cells (ie, Didn't skip over a solid block)
+            var surround = GetSurroundings(CalculateIndex(e.pageX, e.pageY));
 
-        //TODO: Write blink code
-        for(var j = 0; j < 1; j++) {
-            for(i in highlightedPath) {
-                if(j%2 == 0) {
-                    grid[highlightedPath[i]].unHighlight();
-                }else{
-                    grid[highlightedPath[i]].highlight();
+            //TODO: Write blink code
+            for(var j = 0; j < 1; j++) {
+                for(i in highlightedPath) {
+                    if(j%2 == 0) {
+                        grid[highlightedPath[i]].unHighlight();
+                    }else{
+                        grid[highlightedPath[i]].highlight();
+                    }
+                    grid[highlightedPath[i]].repaint(canvas);
                 }
-                grid[highlightedPath[i]].repaint(canvas);
+                sleep(100);
             }
-            sleep(100);
-        }
 
-        //Check for a fire in the surroundings
-        for(i in surround)
-            if(grid[surround[i]].onFire)
-                fireCount++;
+            //Check for a fire in the surroundings
+            for(i in surround)
+                if(grid[surround[i]].onFire)
+                    fireCount++;
 
-        if(fireCount>0 || !safeMode) {
-            //Move or Create fire truck
-            if(truckNo > -1) {
-                trucks[truckNo].setPath(highlightedPath);
-                highlightedPath = Array();
-            }else if(trucks.length < maxTrucks) {
-                trucks.push(new FireTruck(highlightedPath));
-                highlightedPath = Array();
+            if(fireCount>0 || !safeMode) {
+                //Move or Create fire truck
+                if(truckNo > -1) {
+                    trucks[truckNo].setPath(highlightedPath);
+                    highlightedPath = Array();
+                }else if(trucks.length < maxTrucks) {
+                    trucks.push(new FireTruck(highlightedPath));
+                    highlightedPath = Array();
+                }
             }
         }
     }
