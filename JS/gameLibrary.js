@@ -591,9 +591,14 @@ function GameCanvas() {
                 fromStart = true;
             }
 
-            for( j in trucks )
-                if( trucks[j].Pos == surround[i] && truckNo == -1)
+            console.log('Truck doesn\'t move when clicked on. Fix this.');
+
+            for( j in trucks ) {
+                if( trucks[j].Pos == index && truckNo == -1 )
                     truckNo = j;
+                else if( trucks[j].Pos == surround[i] && truckNo == -1)
+                    truckNo = j;
+            }
         }
 
         //Initialise the dragging code, After this the dragging code takes care of the highlighting
