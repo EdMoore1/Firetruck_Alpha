@@ -298,8 +298,13 @@ function GameCanvas() {
 
     GameCanvas.prototype.Setup = function() {
         clearInterval(GameCanvas.timer);
-        asdfGameCanvas.news.destroy();
+        if(GameCanvas.news != null) {
+            GameCanvas.news.destroy();
+        }
+        canvas.clearRect(0,0,GameCanvas.canvasWidth, GameCanvas.canvasHeight);
         var preLoadedImages = [
+            'images/victory.jpg',
+            'images/menu.png',
             'images/sprites/building.jpg',
             'images/sprites/fire.png',
             'images/sprites/Firestation.jpg',
@@ -327,7 +332,6 @@ function GameCanvas() {
             'images/sprites/road_x1.jpg',
             'images/sprites/road.jpg',
             'images/sprites/tree.jpg',
-            'images/victory.jpg',
             ''  //Required for hack
         ];
         var count = 0;
@@ -335,57 +339,65 @@ function GameCanvas() {
         //Show the loading page
         var loadingImg = new Image();
         var temp = new Image();
-        loadingImg.src = 'images/loading.jpg';
-        canvas.drawImage(loadingImg, 0, 0, GameCanvas.canvasWidth, GameCanvas.canvasHeight);
+        loadingImg.src = 'images/loading.png';
 
-        //Draw the loadingBar
-        for(var i in preLoadedImages) {
-            //Border
-            canvas.fillStyle = LOADING_BAR_COLOR;
-            canvas.lineWidth = 1;
-            // canvas.fillRect(LOADING_BAR_X-1, LOADING_BAR_Y-1, LOADING_BAR_WIDTH+2, LOADING_BAR_HEIGHT+2);
-            canvas.rect(LOADING_BAR_X-1, LOADING_BAR_Y-1, LOADING_BAR_WIDTH+2, LOADING_BAR_HEIGHT+2);
-            canvas.strokeStyle = 'rgb(0,0,0)';
-            canvas.stroke();
-            //Bar
-            canvas.fillRect(LOADING_BAR_X, LOADING_BAR_Y, LOADING_BAR_WIDTH * Math.ceil(count/preLoadedImages.length), LOADING_BAR_HEIGHT);
+        setTimeout(function () {
+            canvas.drawImage(loadingImg, 0, 0, GameCanvas.canvasWidth, GameCanvas.canvasHeight);
+            document.getElementById("timer").innerHTML = "";
 
-            temp.src = preLoadedImages[i];
-            count++;
-        }
+            //Draw the loadingBar
+            for(var i in preLoadedImages) {
+                //Border
+                canvas.fillStyle = LOADING_BAR_COLOR;
+                canvas.lineWidth = 1;
+                // canvas.fillRect(LOADING_BAR_X-1, LOADING_BAR_Y-1, LOADING_BAR_WIDTH+2, LOADING_BAR_HEIGHT+2);
+                canvas.rect(LOADING_BAR_X-1, LOADING_BAR_Y-1, LOADING_BAR_WIDTH+2, LOADING_BAR_HEIGHT+2);
+                canvas.strokeStyle = 'rgb(0,0,0)';
+                canvas.stroke();
+                //Bar
+                canvas.fillRect(LOADING_BAR_X, LOADING_BAR_Y, LOADING_BAR_WIDTH * Math.ceil(count/preLoadedImages.length), LOADING_BAR_HEIGHT);
 
+                temp.src = preLoadedImages[i];
+                count++;
+            }
+        }, 10);
+
+
+        //Load this stuff first
+        var menuImg = new Image();
+        menuImg.src = 'images/menu.png';
 
         setTimeout(function(){
-            var menuImg = new Image();
-            menuImg.src = 'images/menu.jpg';
+            canvas.clearRect(0,0,GameCanvas.canvasWidth, GameCanvas.canvasHeight);
             canvas.drawImage(menuImg, 0, 0, GameCanvas.canvasWidth, GameCanvas.canvasHeight);
 
             //Menu Options
             var MenuOpt = ["Play", "Load", "How to Play"];
-            canvas.fillStyle = "rgb(0,0,0);";
+            canvas.fillStyle = "rgb(255,255,255);";
             canvas.font="42px Arial";
             for(var i in MenuOpt)
-                canvas.fillText(MenuOpt[i], 150, 250+(i*75));
+                // canvas.fillText(MenuOpt[i], 150, 250+(i*75));
+                canvas.fillText(MenuOpt[i], 75, 150+(i*75));
 
             c.addEventListener("mousedown", function(e) {
                 var x = e.pageX - c.offsetLeft;
                 var y = e.pageY - c.offsetTop;
 
                 // console.log(x + ',' + y);
-                if(x >= 150 && x <= 300){
-                    if(y >= 215 && y <= 215+35) {
+                if(x >= 75 && x <= 200){
+                    if(y >= 115 && y <= 115+35) {
                             createActionTimer();
                             start();
-                    }else if(y >= 295 && y <= 325){
+                    }else if(y >= 195 && y <= 225){
                         console.log("Load");
-                    }else if(y >= 372 && y <= 400){
+                    }else if(y >= 272 && y <= 300){
                         // canvas.drawImage(menuImg, 0, 0, GameCanvas.canvasWidth, GameCanvas.canvasHeight);
                         // canvas.fillText(HowToPlay_Text, )
-                        console.log("WRITE CODE HERE");
+                        console.log("How to play");
                     }
                 }
             }, false);
-        }, 1000);
+        }, 3000);
     }
 
 

@@ -5,6 +5,7 @@ function NewsFeed() {
     NewsFeed.canvasHeight = 20;
     NewsFeed.moveSpeed = 2;
     NewsFeed.FPS = 30;
+    NewsFeed.disabled = false;
     var c = document.getElementById("news");
     var canvas = c.getContext("2d");
     var currentItem;
@@ -21,8 +22,9 @@ function NewsFeed() {
         newStream();
     }
 
-    NewsFeed.prototype.die = function() {
+    NewsFeed.prototype.destroy = function() {
         clearInterval(NewsFeed.timer);
+        NewsFeed.disabled = true;   // shouldnt make a difference but it does..
         canvas.clearRect(0,0,GameCanvas.canvasWidth,GameCanvas.canvasHeight);
     }
 
@@ -35,8 +37,7 @@ function NewsFeed() {
     };
 
     NewsFeed.timer = setInterval(function() {
-
-        if( writing && !GameCanvas.paused() ) {
+        if( writing && !GameCanvas.paused() && !NewsFeed.disabled ) {
             canvas.font="18px Arial";
             canvas.fillStyle = "rgb(255,255,255);";
             canvas.fillRect(0, 0, NewsFeed.canvasWidth, NewsFeed.canvasHeight);
