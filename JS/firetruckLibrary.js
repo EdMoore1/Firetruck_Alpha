@@ -53,9 +53,10 @@ function FireTruck(Path) {
     FireTruck.prototype.setPath = function(newPath) {
         var i;
 
-        //Start at current position
+        //Start at current position (if not already)
         this.Path = Array();
-        this.Path.push(this.Pos);
+        if(newPath[0] != this.Pos)
+            this.Path.push(this.Pos);
 
         //Push the rest of the array
         for ( i in newPath )
