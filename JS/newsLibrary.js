@@ -3,8 +3,7 @@ function NewsFeed() {
     "use strict";
     NewsFeed.canvasWidth = 1024;
     NewsFeed.canvasHeight = 20;
-    NewsFeed.moveSpeed = 2;
-    NewsFeed.FPS = 30;
+    NewsFeed.moveSpeed = (100/GameCanvas.FPS);
     NewsFeed.disabled = false;
     var c = document.getElementById("news");
     var canvas = c.getContext("2d");
@@ -36,7 +35,7 @@ function NewsFeed() {
         writing = true;
     };
 
-    NewsFeed.timer = setInterval(function() {
+    NewsFeed.prototype.repaint = function() {
         if( writing && !GameCanvas.paused() && !NewsFeed.disabled ) {
             canvas.font="18px Arial";
             canvas.fillStyle = "rgb(255,255,255);";
@@ -54,7 +53,7 @@ function NewsFeed() {
         }
 
 
-    }, Math.round(1000/NewsFeed.FPS));
+    }
 
 
 }

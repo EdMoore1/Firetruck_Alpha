@@ -5,6 +5,7 @@ function GameCanvas() {
     GameCanvas.canvasHeight = 640;
     GameCanvas.blockSize = 32;          //Should be one of 1, 2, 4, 8, 16, 32, 64, 128
     GameCanvas.levels = levels;
+    GameCanvas.FPS = 30;
     var c = document.getElementById("game");
     var canvas = c.getContext("2d");
     var i, j;
@@ -398,7 +399,6 @@ function GameCanvas() {
                 var x = e.pageX - c.offsetLeft;
                 var y = e.pageY - c.offsetTop;
 
-                // console.log(x + ',' + y);
                 if(x >= 75 && x <= 200){
                     if(y >= 115 && y <= 115+35) {
                         start();
@@ -479,33 +479,38 @@ function GameCanvas() {
                 var toBurn = Array();
                 var burnCount;
                 var burnTarget = -1;
-                
+                var onSec = (GameCanvas.points.getms() % 1000) == 0;
+            
 
                 //Evaluate burn conditions
                 //May need optimisation
-                for(i in grid) {
-                    if (grid[i].onFire) {
-                        var sur = GetFurtherSurroundings(grid[i].ID);
-                        burnCount = 0;
-                        for(j in sur) {
-                            if( grid[sur[j]].flammable != 0 && 
-                                ([0,1,2,3,4,5,10,13,14,,18,19,20,21,22,23].indexOf(j) >= 0 && (Math.random() < (grid[sur[j]].flammable/DIST_SCALAR)) ||
-                                (Math.random() < grid[sur[j]].flammable)))
-                                if(burnCount++ < MAX_BURN_COUNT)
-                                    toBurn.push(sur[j]);
+                if(onSec)
+                    for(i in grid) {
+                        if (grid[i].onFire) {
+                            var sur = GetFurtherSurroundings(grid[i].ID);
+                            burnCount = 0;
+                            for(j in sur) {
+                                if( grid[sur[j]].flammable != 0 && 
+                                    ([0,1,2,3,4,5,10,13,14,,18,19,20,21,22,23].indexOf(j) >= 0 && (Math.random() < (grid[sur[j]].flammable/DIST_SCALAR)) ||
+                                    (Math.random() < grid[sur[j]].flammable)))
+                                    if(burnCount++ < MAX_BURN_COUNT)
+                                        toBurn.push(sur[j]);
+                            }
+                            GameCanvas.points.addDamage(grid[i].cost/grid[i].totalHealth);
                         }
-                        GameCanvas.points.addDamage(grid[i].cost/grid[i].totalHealth);
-                } }
+                    }
+
 
                 //Update all the tiles
                 for(i in grid) {
-                    grid[i].update();
+                    if(onSec)
+                        grid[i].update();
                     grid[i].repaint(canvas);
                 }
 
                 //Truck operations
                 for(i in trucks) {
-                    if( trucks[i].Stopped == true ) {
+                    if( trucks[i].Stopped == true && onSec) {
                         trucks[i].Repaint(canvas);
                         var sur = GetSurroundings(trucks[i].last());
                         for(j in sur) {
@@ -524,7 +529,7 @@ function GameCanvas() {
                     }
                 }
 
-                if(GameCanvas.points.getTime()%fireFrequency == 0) {
+                if(onSec && (GameCanvas.points.getTime()%fireFrequency == 0) ) {
                     while(burnTarget < 0 || grid[burnTarget].flammable == 0) {
                         burnTarget = Math.floor(Math.random() * grid.length);
                         for(i in trucks)
@@ -535,16 +540,18 @@ function GameCanvas() {
                 }
 
                 //Dont burn tiles that a truck is on
-                for(i in trucks)
-                    for(j in toBurn)
-                        if(trucks[i].Pos == toBurn[j])
-                            delete toBurn[j];
+                if(onSec)
+                    for(i in trucks)
+                        for(j in toBurn)
+                            if(trucks[i].Pos == toBurn[j])
+                                delete toBurn[j];
 
                 //Burn the tiles required
-                for(i in toBurn) {
-                    grid[toBurn[i]].burn();
-                    grid[toBurn[i]].repaint(canvas);
-                }
+                if(onSec)
+                    for(i in toBurn) {
+                        grid[toBurn[i]].burn();
+                        grid[toBurn[i]].repaint(canvas);
+                    }
 
                 //Evaluate win conditions
                 var noFires = true;
@@ -564,10 +571,11 @@ function GameCanvas() {
                 }
 
                 //Increment the timer
-                GameCanvas.points.nextSecond();
+                GameCanvas.points.nextms();
                 GameCanvas.points.repaint();
+                GameCanvas.news.repaint();
             }
-        }, 1000);
+        }, Math.round(1000/GameCanvas.FPS));
 
 
         c.addEventListener("mousedown", MouseDownHandler, false);
@@ -608,7 +616,6 @@ function GameCanvas() {
 
     function MouseUpHandler(e) {
         dragging = false;
-        var count = 0;
         var i;
         var fireCount = 0;
         e.preventDefault();

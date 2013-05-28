@@ -31,8 +31,8 @@ function PointsFeed() {
         canvas.clearRect(0,0,GameCanvas.canvasWidth,GameCanvas.canvasHeight);
     }
 
-    PointsFeed.prototype.nextSecond = function() {
-        timer++;
+    PointsFeed.prototype.nextms = function() {
+        timer+=(1000/GameCanvas.FPS);
     }
 
 
@@ -45,8 +45,13 @@ function PointsFeed() {
     }
 
     PointsFeed.prototype.getTime = function() {
+        return Math.floor(timer/1000);
+    }
+
+    PointsFeed.prototype.getms = function() {
         return timer;
     }
+
 
     PointsFeed.prototype.failed = function() {
         return damage >= maxDamage;
@@ -54,9 +59,11 @@ function PointsFeed() {
 
     PointsFeed.prototype.repaint = function() {
         canvas.clearRect(0,0,PointsFeed.canvasWidth, PointsFeed.canvasHeight);
+
+        var tmp = timer/1000;
         
-        var mins = Math.floor(timer/60);
-        var secs = Math.floor(timer%60);
+        var mins = Math.floor(tmp/60);
+        var secs = Math.floor(tmp%60);
 
         //Formatting bug fix
         if(secs < 10) secs = "0" + secs;
