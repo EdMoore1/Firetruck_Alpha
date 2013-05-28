@@ -513,7 +513,7 @@ function GameCanvas() {
                             if(!foundTarget && !isNaN(sur[j]) && grid[sur[j]].onFire) {
                                 foundTarget = true;
                                 grid[sur[j]].sprayed();
-                                GameCanvas.points.NextPoint();
+                                GameCanvas.points.addPoint();
                             }
                         }
                     }else{
@@ -594,8 +594,6 @@ function GameCanvas() {
                 fromStart = true;
             }
 
-            console.log('Truck doesn\'t move when clicked on. Fix this.');
-
             for( j in trucks ) {
                 if( trucks[j].Pos == index && truckNo == -1 ) {
                     truckNo = j;
@@ -648,7 +646,7 @@ function GameCanvas() {
                 if(truckNo > -1) {
                     trucks[truckNo].setPath(highlightedPath);
                     highlightedPath = Array();
-                }else if(trucks.length < maxTrucks) {
+                }else if(trucks.length <= maxTrucks) {
                     trucks.push(new FireTruck(highlightedPath));
                     highlightedPath = Array();
                 }

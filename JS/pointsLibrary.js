@@ -36,7 +36,7 @@ function PointsFeed() {
     }
 
 
-    PointsFeed.prototype.nextPoint = function() {
+    PointsFeed.prototype.addPoint = function() {
         points++;
     }
 
