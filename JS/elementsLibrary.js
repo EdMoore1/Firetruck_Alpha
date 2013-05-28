@@ -26,12 +26,14 @@ function Element(position) {
 	this.onFire = null;
 	this.timeLeft = null;
 	this.health = null;
+	this.totalHealth = null
 	this.originalColor = null;
 	this.x = null;
 	this.y = null;
 	this.type = null;
 	this.highlighted = null;
 	this.img;
+	this.cost;
 
 	this.init = function(position) {
 		this.typeInit();
@@ -41,12 +43,13 @@ function Element(position) {
 		this.time = Math.ceil(this.flammable*(this.height+1)*TimeScalar);
 		this.onFire = false;
 		this.timeLeft = this.time;
-		this.health = 60;
+		this.health = this.totalHealth;
 		this.x = Math.floor( (position*GameCanvas.blockSize)%(GameCanvas.canvasWidth) );
 		this.y = ( Math.floor((position*GameCanvas.blockSize)/(GameCanvas.canvasWidth))*GameCanvas.blockSize );
 		this.highlighted = false;
 		this.sprite = "";
 		this.img.src = "images/sprites/" + this.className +".jpg";
+		this.cost = this.cost * Math.floor(Math.random() * 1.50 + 0.75);
 
 		return this;
 	}
@@ -131,6 +134,8 @@ function Building() {
 		this.className = "building";
 		this.height = Math.floor(Math.random() * 10) + 1;
 		this.flammable = Math.random() * 0.010 + 0.005;
+		this.cost = 50000 * this.height;
+		this.totalHealth = this.height * 30;
 	}
 }
 
@@ -139,6 +144,8 @@ function Grass() {
 		this.className = "grass";
 		this.height = 0;
 		this.flammable = Math.random() * 0.004 + 0.0001;
+		this.cost = 25;
+		this.totalHealth = 30;
 	}
 }
 function FireStation() {
@@ -146,6 +153,8 @@ function FireStation() {
 		this.className = "firestation";
 		this.height = 2;
 		this.flammable = 0;
+		this.cost = 0;
+		this.totalHealth = 1;
 	}
 }
 function Road() {
@@ -153,6 +162,8 @@ function Road() {
 		this.className = "road";
 		this.height = 0;
 		this.flammable = 0;
+		this.cost = 0;
+		this.totalHealth = 1;
 	}
 
 	this.setDir = function(direction) {
@@ -165,6 +176,8 @@ function GasStation() {
 		this.className = "gasstation";
 		this.height = 2;
 		this.flammable = 0.50;
+		this.cost = 75000;
+		this.totalHealth = 30;
 	}
 }
 
@@ -173,6 +186,8 @@ function Tree() {
 		this.className = "tree";
 		this.height = Math.floor(Math.random()*4) + 1;
 		this.flammable = Math.random() * 0.005 + 0.0001;
+		this.cost = 50;
+		this.totalHealth = 60;
 	}
 }
 
@@ -181,6 +196,8 @@ function River() {
 		this.className = "river";
 		this.height = 1;
 		this.flammable = 0;
+		this.cost = 0;
+		this.totalHealth = 1;
 	}
 
 	this.setDir = function(direction) {
@@ -194,6 +211,8 @@ function RiverBridge() {
 		this.className = "river";
 		this.height = 0;
 		this.flammable = 0;
+		this.cost = 0;
+		this.totalHealth = 1;
 	}
 
 	this.setDir = function(direction) {

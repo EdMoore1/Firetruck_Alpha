@@ -20,6 +20,7 @@ function GameCanvas() {
     var img = new Image();
     var currentLevel = 0;
     var nextLevel = false;
+    var points;
     GameCanvas.news;
 
     //Loading Bar Variables
@@ -211,10 +212,13 @@ function GameCanvas() {
     var start = function () {
         createActionTimer();
         time = 0;
+        points = 0;
         trucks = Array();
         var level = GameCanvas.levels[currentLevel]['level'].slice(0);
         maxTrucks = GameCanvas.levels[currentLevel]['trucks'];
         GameCanvas.news = new NewsFeed();
+        GameCanvas.points = new PointsFeed();
+        GameCanvas.points.setMaxDamage(GameCanvas.levels[currentLevel]['maxDamage']);
 
         for(var i = 0; i < level.length; i++) {
             grid[i] = intToBlock(level[i], i);
@@ -289,10 +293,14 @@ function GameCanvas() {
 
 
         var img = new Image();
-        img.src = 'images/victory.jpg';
+        if(won)
+            img.src = 'images/victory.jpg';
+        else
+            img.src = 'images/failed.jpg';
 
         img.onload = function() {
             GameCanvas.news.destroy();
+            GameCanvas.points.destroy();
             canvas.clearRect(0,0,GameCanvas.canvasWidth, GameCanvas.canvasHeight);
             canvas.drawImage(img, 0,0,GameCanvas.canvasWidth, GameCanvas.canvasHeight);
         }
@@ -301,15 +309,14 @@ function GameCanvas() {
 
         //Print the Points and Time taken
 
-        //Create the handlers
-
     }
 
     GameCanvas.prototype.Setup = function() {
         clearInterval(GameCanvas.timer);
-        if(GameCanvas.news != null) {
+        if(GameCanvas.news != null)
             GameCanvas.news.destroy();
-        }
+        if(GameCanvas.points != null)
+            GameCanvas.points.destroy();
         canvas.clearRect(0,0,GameCanvas.canvasWidth, GameCanvas.canvasHeight);
         var preLoadedImages = [
             'images/victory.jpg',
@@ -352,7 +359,6 @@ function GameCanvas() {
 
         loadingImg.onload = function () {
             canvas.drawImage(loadingImg, 0, 0, GameCanvas.canvasWidth, GameCanvas.canvasHeight);
-            document.getElementById("timer").innerHTML = "";
 
             //Draw the loadingBar
             for(var i in preLoadedImages) {
@@ -488,6 +494,7 @@ function GameCanvas() {
                                 if(burnCount++ < MAX_BURN_COUNT)
                                     toBurn.push(sur[j]);
                         }
+                        GameCanvas.points.addDamage(grid[i].cost/grid[i].totalHealth);
                 } }
 
                 //Update all the tiles
@@ -506,6 +513,7 @@ function GameCanvas() {
                             if(!foundTarget && !isNaN(sur[j]) && grid[sur[j]].onFire) {
                                 foundTarget = true;
                                 grid[sur[j]].sprayed();
+                                GameCanvas.points.NextPoint();
                             }
                         }
                     }else{
@@ -516,8 +524,7 @@ function GameCanvas() {
                     }
                 }
 
-
-                if(time%fireFrequency == 0) {
+                if(GameCanvas.points.getTime()%fireFrequency == 0) {
                     while(burnTarget < 0 || grid[burnTarget].flammable == 0) {
                         burnTarget = Math.floor(Math.random() * grid.length);
                         for(i in trucks)
@@ -552,17 +559,13 @@ function GameCanvas() {
                     end(true);
                 }
 
+                if(GameCanvas.points.failed()){
+                    end(false);
+                }
+
                 //Increment the timer
-                var mins = Math.floor(time/60);
-                var secs = Math.floor(time%60);
-
-                //Clean up the time
-                if(secs < 10) 
-                    secs = "0" + secs;
-
-
-                document.getElementById("timer").innerHTML = mins +":"+ secs;
-                time++;
+                GameCanvas.points.nextSecond();
+                GameCanvas.points.repaint();
             }
         }, 1000);
 
@@ -594,9 +597,9 @@ function GameCanvas() {
             console.log('Truck doesn\'t move when clicked on. Fix this.');
 
             for( j in trucks ) {
-                if( trucks[j].Pos == index && truckNo == -1 )
+                if( trucks[j].Pos == index && truckNo == -1 ) {
                     truckNo = j;
-                else if( trucks[j].Pos == surround[i] && truckNo == -1)
+                }else if( trucks[j].Pos == surround[i] && truckNo == -1)
                     truckNo = j;
             }
         }
