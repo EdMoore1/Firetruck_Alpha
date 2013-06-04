@@ -57,7 +57,7 @@ function Element(position) {
 		if(this.img.src == "")
 			this.img.src = "images/sprites/" + this.className +".png";
 		this.cost = this.cost * Math.floor(Math.random() * 1.50 + 0.75);
-		this.alt = false;
+		this.alt = 0;
 
 		return this;
 	}

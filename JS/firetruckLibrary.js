@@ -1,3 +1,11 @@
+var trucksImg = Array();
+var trucksRef = ["h0_0", "h0_1", "v0_0", "v0_1", "h1_0", "h1_1", "v1_0", "v1_1"];
+
+for(var i in trucksRef) {
+    trucksImg[i] = new Image();
+    trucksImg[i].src = "images/sprites/truck_"+ trucksRef[i] +".png";
+}
+
 function FireTruck(Path) {
 	this.Path = Path;
 	this.Stopped = false;
@@ -6,12 +14,16 @@ function FireTruck(Path) {
     this.sprite = "sprites/fireTruck01.gif";
     this.color = 'rgb(0,0,0)';
     this.Pos = Path[0];
-    this.img = new Image();
-    this.img.src = "images/sprites/firetruck.png";
+    // this.img = new Image();
+    // this.img.src = "images/sprites/firetruck.png";
+    this.imgRef = 0;
     this.target = 0;
     this.xOffset = 0;
     this.yOffset = 0;
-    this.moveSpeed = 20;
+    this.moveSpeed = 25;
+    this.alt = 0;
+
+
 
     /*FireTruck.prototype.Move = function() {
         var found = false;
@@ -51,7 +63,7 @@ function FireTruck(Path) {
             if(this.target == this.Path.length-1) {
                 this.Stopped = true;
             }
-            
+
             this.target++;
             this.xOffset = 0;
             this.yOffset = 0;
@@ -61,6 +73,24 @@ function FireTruck(Path) {
             //Move closer to the target
             this.xOffset += ((Math.floor(this.Path[this.target]%lineOffset) - Math.floor(this.Pos%lineOffset))/GameCanvas.FPS)*this.moveSpeed;
             this.yOffset += ((Math.floor(this.Path[this.target]/lineOffset) - Math.floor(this.Pos/lineOffset))/GameCanvas.FPS)*this.moveSpeed;
+
+            //Set the direction of the sprite
+            if(this.xOffset > 0)
+                this.imgRef = 0;
+            else if(this.yOffset < 0)
+                this.imgRef = 2;
+            else if(this.xOffset < 0)
+                this.imgRef = 4;
+            else
+                this.imgRef = 6;
+
+            if(this.alt > GameCanvas.FPS/2)
+                this.imgRef++;
+
+            this.alt++;
+            this.alt %= 30;
+
+
 
             //If aligned to the target, set that as the position
             if( Math.round(Math.abs(this.yOffset)) == lineOffset ||
@@ -113,7 +143,7 @@ function FireTruck(Path) {
         var x = Math.floor( (this.Pos*GameCanvas.blockSize)%(GameCanvas.canvasWidth) );
         var y = ( Math.floor((this.Pos*GameCanvas.blockSize)/(GameCanvas.canvasWidth))*GameCanvas.blockSize );
 
-        canvas.drawImage(this.img, Math.floor(x+this.xOffset), Math.floor(y+this.yOffset), GameCanvas.blockSize, GameCanvas.blockSize * (this.img.height / this.img.width));
+        canvas.drawImage(trucksImg[this.imgRef], Math.floor(x+this.xOffset), Math.floor(y+this.yOffset), GameCanvas.blockSize, GameCanvas.blockSize * (trucksImg[this.imgRef].height / trucksImg[this.imgRef].width));
 
         // canvas.fillStyle = this.color;
         // canvas.fillRect(x, y, GameCanvas.blockSize, GameCanvas.blockSize);
