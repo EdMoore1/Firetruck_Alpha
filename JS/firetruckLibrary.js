@@ -11,7 +11,7 @@ function FireTruck(Path) {
     this.target = 0;
     this.xOffset = 0;
     this.yOffset = 0;
-    this.moveSpeed = 15;
+    this.moveSpeed = 20;
 
     /*FireTruck.prototype.Move = function() {
         var found = false;
@@ -43,18 +43,18 @@ function FireTruck(Path) {
 
     FireTruck.prototype.Move = function() {
         //Don't move if the truck is stopped
-        if(this.Stopped) return;
+        if(this.Stopped)return;
 
         //If at destination
         if(this.Pos == this.Path[this.target]){
             //If end of the path
-            if(this.target == this.Path.length) {
+            if(this.target == this.Path.length-1) {
                 this.Stopped = true;
-            }else{
-                this.target++;
-                this.xOffset = 0;
-                this.yOffset = 0;
             }
+            
+            this.target++;
+            this.xOffset = 0;
+            this.yOffset = 0;
         }else{
             var lineOffset = GameCanvas.canvasWidth/GameCanvas.blockSize;
 
@@ -63,11 +63,17 @@ function FireTruck(Path) {
             this.yOffset += ((Math.floor(this.Path[this.target]/lineOffset) - Math.floor(this.Pos/lineOffset))/GameCanvas.FPS)*this.moveSpeed;
 
             //If aligned to the target, set that as the position
-            if( Math.abs(this.yOffset) == lineOffset ||
-                Math.abs(this.xOffset) == GameCanvas.blockSize ) {
+            if( Math.round(Math.abs(this.yOffset)) == lineOffset ||
+                Math.round(Math.abs(this.xOffset)) == GameCanvas.blockSize ) {
                 this.Pos = this.Path[this.target];
-                console.log('newTarget:'+this.Pos);
+                // this.target++;
+                // this.xOffset = 0;
+                // this.yOffset = 0;
+                this.Move();
+                // console.log('newTarget:'+this.Pos);
             }
+
+            // console.log('[Pos, Target, Path[Target], Path.Length] = (' + this.Pos +','+ this.target +',' + this.Path[this.target] +','+ this.Path.length+')');
 
             // console.log(this.xOffset +','+ this.yOffset);
         }
