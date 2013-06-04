@@ -13,8 +13,12 @@ var ColorFire = 'rgb(255,102,000)';
 //CONFIG
 var TimeScalar = 30;
 var Debugging = false;
-var fire = new Image();
-fire.src = "images/sprites/fire.png";
+var fire1 = new Image();
+fire1.src = "images/sprites/fire-1.png";
+var fire2 = new Image();
+fire2.src = "images/sprites/fire-2.png";
+var rubble = new Image();
+rubble.src = "images/sprites/rubble.png";
 
 
 function Element(position) {
@@ -34,10 +38,12 @@ function Element(position) {
 	this.highlighted = null;
 	this.img;
 	this.cost;
+	this.alt;
+	this.sizeScale = 1;
 
 	this.init = function(position) {
-		this.typeInit();
 		this.img = new Image();
+		this.typeInit();
 
 		this.ID = position;
 		this.time = Math.ceil(this.flammable*(this.height+1)*TimeScalar);
@@ -48,8 +54,10 @@ function Element(position) {
 		this.y = ( Math.floor((position*GameCanvas.blockSize)/(GameCanvas.canvasWidth))*GameCanvas.blockSize );
 		this.highlighted = false;
 		this.sprite = "";
-		this.img.src = "images/sprites/" + this.className +".jpg";
+		if(this.img.src == "")
+			this.img.src = "images/sprites/" + this.className +".png";
 		this.cost = this.cost * Math.floor(Math.random() * 1.50 + 0.75);
+		this.alt = false;
 
 		return this;
 	}
@@ -106,23 +114,27 @@ Element.prototype.repaint = function(canvas) {
 		canvas.font="10px Arial";
 		canvas.fillText(this.health,this.x,this.y+9);
 	}else {
-        canvas.drawImage(this.img, this.x, this.y, GameCanvas.blockSize, GameCanvas.blockSize * (this.img.height / this.img.width));
+		if(this.health == 0)
+			canvas.drawImage(rubble, this.x, this.y, GameCanvas.blockSize*this.sizeScale, GameCanvas.blockSize*this.sizeScale * (this.img.height / this.img.width));
+		else {
+        	canvas.drawImage(this.img, this.x, this.y, GameCanvas.blockSize*this.sizeScale, GameCanvas.blockSize*this.sizeScale * (this.img.height / this.img.width));
 
-        if(this.onFire) {
-			// temp.src = "images/sprites/fire.png";
-			canvas.drawImage(fire, this.x, this.y, GameCanvas.blockSize, GameCanvas.blockSize * (this.img.height / this.img.width));
-		}
+	        if(this.onFire) {
+				// temp.src = "images/sprites/fire.png";
+				if(this.alt > GameCanvas.FPS/2)
+					canvas.drawImage(fire1, this.x, this.y, GameCanvas.blockSize*this.sizeScale, GameCanvas.blockSize*this.sizeScale * (this.img.height / this.img.width));
+				else
+					canvas.drawImage(fire2, this.x, this.y, GameCanvas.blockSize*this.sizeScale, GameCanvas.blockSize*this.sizeScale * (this.img.height / this.img.width));
+				this.alt++;
+				this.alt %= 30;
+			}
 
-		if(this.highlighted) {
-			canvas.fillStyle = ColorHighlighted;
-			canvas.globalAlpha=0.5;
-			canvas.fillRect(this.x, this.y, GameCanvas.blockSize, GameCanvas.blockSize);
-			canvas.globalAlpha=1.0;
-		}
-
-		if(this.health == 0) {
-			canvas.fillStyle = 'rgb(0,0,0)';
-			canvas.fillRect(this.x, this.y, GameCanvas.blockSize, GameCanvas.blockSize);
+			if(this.highlighted) {
+				canvas.fillStyle = ColorHighlighted;
+				canvas.globalAlpha=0.5;
+				canvas.fillRect(this.x, this.y, GameCanvas.blockSize, GameCanvas.blockSize);
+				canvas.globalAlpha=1.0;
+			}
 		}
 	}
 }
@@ -136,6 +148,10 @@ function Building() {
 		this.flammable = Math.random() * 0.010 + 0.005;
 		this.cost = 50000 * this.height;
 		this.totalHealth = this.height * 30;
+
+		var numSprites = 4;
+
+		this.img.src = "images/sprites/" + this.className + '_' + Math.floor(Math.random() * numSprites) +".png";
 	}
 }
 
@@ -143,8 +159,8 @@ function Grass() {
 	this.typeInit = function() {
 		this.className = "grass";
 		this.height = 0;
-		this.flammable = Math.random() * 0.004 + 0.0001;
-		this.cost = 25;
+		this.flammable = Math.random() * 0.005 + 0.0002;
+		this.cost = 30;
 		this.totalHealth = 30;
 	}
 }
@@ -155,8 +171,21 @@ function FireStation() {
 		this.flammable = 0;
 		this.cost = 0;
 		this.totalHealth = 1;
+		this.sizeScale = 2;
 	}
 }
+function InvisBlock() {
+	this.typeInit = function() {
+		this.className = "firestation";
+		this.height = 1;
+		this.flammable = 0;
+		this.cost = 0;
+		this.totalHealth = 1;
+		this.sizeScale = 1;
+	}
+	this.repaint = function (canvas) {}
+}
+
 function Road() {
 	this.typeInit = function() {
 		this.className = "road";
@@ -168,7 +197,7 @@ function Road() {
 
 	this.setDir = function(direction) {
 		this.sprite = direction;
-		this.img.src = "images/sprites/" + this.className +"_"+ this.sprite +".jpg";
+		this.img.src = "images/sprites/" + this.className +"_"+ this.sprite +".png";
 	}
 }
 function GasStation() {
@@ -202,7 +231,7 @@ function River() {
 
 	this.setDir = function(direction) {
 		this.sprite = direction;
-		this.img.src = "images/sprites/" + this.className +"_"+ this.sprite +".jpg";
+		this.img.src = "images/sprites/" + this.className +"_"+ this.sprite +".png";
 	}
 }
 
@@ -217,7 +246,7 @@ function RiverBridge() {
 
 	this.setDir = function(direction) {
 		this.sprite = "b_" + direction;
-		this.img.src = "images/sprites/" + this.className +"_"+ this.sprite +".jpg";
+		this.img.src = "images/sprites/" + this.className +"_"+ this.sprite +".png";
 	}
 }
 
@@ -230,3 +259,4 @@ GasStation.prototype = new Element();
 Tree.prototype = new Element();
 River.prototype = new Element();
 RiverBridge.prototype = new Element();
+InvisBlock.prototype = new Element();

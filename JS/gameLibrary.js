@@ -34,7 +34,7 @@ function GameCanvas() {
     //Core Variables
     var grid = initLevel.slice(0);
     var DIST_SCALAR = 8;
-    var MAX_BURN_COUNT = 5;
+    var MAX_BURN_COUNT = 25;
     var PAUSE_WHILE_DRAGGING = true;
 
     var dragging = false;
@@ -200,6 +200,7 @@ function GameCanvas() {
             case(7): return new Tree(pos);
             case(8): return new River(pos);
             case(9): return new RiverBridge(pos);
+            case(10): return new InvisBlock(pos);
             default:
                 throw new Error("CRITICAL: Unable to match int to BlockType (" + i +")");
                 return null;   //Will throw error
@@ -323,33 +324,34 @@ function GameCanvas() {
             'images/victory.png',
             'images/failed.png',
             'images/menu.png',
-            'images/sprites/building.jpg',
+            'images/sprites/building.png',
             'images/sprites/fire.png',
-            'images/sprites/Firestation.jpg',
+            'images/sprites/Firestation.png',
             'images/sprites/firetruck.png',
-            'images/sprites/grass.jpg',
-            'images/sprites/river_b_h1.jpg',
-            'images/sprites/river_b_v1.jpg',
-            'images/sprites/river_c1.jpg',
-            'images/sprites/river_c2.jpg',
-            'images/sprites/river_c3.jpg',
-            'images/sprites/river_c4.jpg',
-            'images/sprites/river_h1.jpg',
-            'images/sprites/river_v1.jpg',
-            'images/sprites/road_c1.jpg',
-            'images/sprites/road_c2.jpg',
-            'images/sprites/road_c3.jpg',
-            'images/sprites/road_c4.jpg',
-            'images/sprites/road_h1.jpg',
-            'images/sprites/road_t1.jpg',
-            'images/sprites/road_t2.jpg',
-            'images/sprites/road_t3.jpg',
-            'images/sprites/road_t4.jpg',
-            'images/sprites/road_v1.jpg',
-            'images/sprites/road_vert.jpg',
-            'images/sprites/road_x1.jpg',
-            'images/sprites/road.jpg',
-            'images/sprites/tree.jpg',
+            'images/sprites/grass.png',
+            'images/sprites/river_b_h1.png',
+            'images/sprites/river_b_v1.png',
+            'images/sprites/river_c1.png',
+            'images/sprites/river_c2.png',
+            'images/sprites/river_c3.png',
+            'images/sprites/river_c4.png',
+            'images/sprites/river_h1.png',
+            'images/sprites/river_v1.png',
+            'images/sprites/road_c1.png',
+            'images/sprites/road_c2.png',
+            'images/sprites/road_c3.png',
+            'images/sprites/road_c4.png',
+            'images/sprites/road_h1.png',
+            'images/sprites/road_t1.png',
+            'images/sprites/road_t2.png',
+            'images/sprites/road_t3.png',
+            'images/sprites/road_t4.png',
+            'images/sprites/road_v1.png',
+            'images/sprites/road_vert.png',
+            'images/sprites/road_x1.png',
+            'images/sprites/road.png',
+            'images/sprites/tree.png',
+            'images/sprites/rubble.png',
             ''  //Required for hack
         ];
         var count = 0;
@@ -492,12 +494,13 @@ function GameCanvas() {
                             burnCount = 0;
                             for(j in sur) {
                                 if( grid[sur[j]].flammable != 0 && 
-                                    ([0,1,2,3,4,5,10,13,14,,18,19,20,21,22,23].indexOf(j) >= 0 && (Math.random() < (grid[sur[j]].flammable/DIST_SCALAR)) ||
+                                    ([0,1,2,3,4,5,10,13,14,,18,19,20,21,22,23].indexOf(j) == 1 && (Math.random() < (grid[sur[j]].flammable/DIST_SCALAR)) ||
                                     (Math.random() < grid[sur[j]].flammable)))
                                     if(burnCount++ < MAX_BURN_COUNT)
                                         toBurn.push(sur[j]);
                             }
                             GameCanvas.points.addDamage(grid[i].cost/grid[i].totalHealth);
+                            // console.log(grid[i].cost/grid[i].totalHealth + ' damage taken.');
                         }
                     }
 
