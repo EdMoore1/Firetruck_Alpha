@@ -5,7 +5,7 @@ function GameCanvas() {
     GameCanvas.canvasHeight = 640;
     GameCanvas.blockSize = 32;          //Should be one of 1, 2, 4, 8, 16, 32, 64, 128
     GameCanvas.levels = levels;
-    GameCanvas.FPS = 30;
+    GameCanvas.FPS = 25;
     var c = document.getElementById("game");
     var canvas = c.getContext("2d");
     var i, j;
@@ -295,9 +295,9 @@ function GameCanvas() {
 
         var img = new Image();
         if(won)
-            img.src = 'images/victory.jpg';
+            img.src = 'images/victory.png';
         else
-            img.src = 'images/failed.jpg';
+            img.src = 'images/failed.png';
 
         img.onload = function() {
             GameCanvas.news.destroy();
@@ -320,7 +320,8 @@ function GameCanvas() {
             GameCanvas.points.destroy();
         canvas.clearRect(0,0,GameCanvas.canvasWidth, GameCanvas.canvasHeight);
         var preLoadedImages = [
-            'images/victory.jpg',
+            'images/victory.png',
+            'images/failed.png',
             'images/menu.png',
             'images/sprites/building.jpg',
             'images/sprites/fire.png',

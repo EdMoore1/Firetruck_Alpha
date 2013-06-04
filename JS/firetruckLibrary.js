@@ -8,8 +8,12 @@ function FireTruck(Path) {
     this.Pos = Path[0];
     this.img = new Image();
     this.img.src = "images/sprites/firetruck.png";
+    this.target = 0;
+    this.xOffset = 0;
+    this.yOffset = 0;
+    this.moveSpeed = 15;
 
-    FireTruck.prototype.Move = function() {
+    /*FireTruck.prototype.Move = function() {
         var found = false;
         var next = -1;
 
@@ -35,7 +39,39 @@ function FireTruck(Path) {
 
 
         if(found == true) this.Stopped = true;
-    };
+    }; */
+
+    FireTruck.prototype.Move = function() {
+        //Don't move if the truck is stopped
+        if(this.Stopped) return;
+
+        //If at destination
+        if(this.Pos == this.Path[this.target]){
+            //If end of the path
+            if(this.target == this.Path.length) {
+                this.Stopped = true;
+            }else{
+                this.target++;
+                this.xOffset = 0;
+                this.yOffset = 0;
+            }
+        }else{
+            var lineOffset = GameCanvas.canvasWidth/GameCanvas.blockSize;
+
+            //Move closer to the target
+            this.xOffset += ((Math.floor(this.Path[this.target]%lineOffset) - Math.floor(this.Pos%lineOffset))/GameCanvas.FPS)*this.moveSpeed;
+            this.yOffset += ((Math.floor(this.Path[this.target]/lineOffset) - Math.floor(this.Pos/lineOffset))/GameCanvas.FPS)*this.moveSpeed;
+
+            //If aligned to the target, set that as the position
+            if( Math.abs(this.yOffset) == lineOffset ||
+                Math.abs(this.xOffset) == GameCanvas.blockSize ) {
+                this.Pos = this.Path[this.target];
+                console.log('newTarget:'+this.Pos);
+            }
+
+            // console.log(this.xOffset +','+ this.yOffset);
+        }
+    }
 
     FireTruck.prototype.last = function() {
 
@@ -52,6 +88,7 @@ function FireTruck(Path) {
 
     FireTruck.prototype.setPath = function(newPath) {
         var i;
+        this.target = 0;
 
         //Start at current position (if not already)
         this.Path = Array();
@@ -70,7 +107,7 @@ function FireTruck(Path) {
         var x = Math.floor( (this.Pos*GameCanvas.blockSize)%(GameCanvas.canvasWidth) );
         var y = ( Math.floor((this.Pos*GameCanvas.blockSize)/(GameCanvas.canvasWidth))*GameCanvas.blockSize );
 
-        canvas.drawImage(this.img, x, y, GameCanvas.blockSize, GameCanvas.blockSize * (this.img.height / this.img.width));
+        canvas.drawImage(this.img, Math.floor(x+this.xOffset), Math.floor(y+this.yOffset), GameCanvas.blockSize, GameCanvas.blockSize * (this.img.height / this.img.width));
 
         // canvas.fillStyle = this.color;
         // canvas.fillRect(x, y, GameCanvas.blockSize, GameCanvas.blockSize);
