@@ -20,7 +20,7 @@ function FireTruck(Path) {
     this.target = 0;
     this.xOffset = 0;
     this.yOffset = 0;
-    this.moveSpeed = 25;
+    this.moveSpeed = 35;
     this.alt = 0;
 
 

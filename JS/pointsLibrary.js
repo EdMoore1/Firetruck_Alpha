@@ -72,7 +72,7 @@ function PointsFeed() {
         canvas.fillStyle = "rgb(255,255,255);";
 
         //Print the info out
-        canvas.fillText( "Damage: " + damage +"/"+ maxDamage, damageX, y);
+        canvas.fillText( "Damage ($): " + damage +"/"+ maxDamage, damageX, y);
         canvas.fillText( mins +":"+ secs, timerX, y);
         canvas.fillText( "Points: " + points, pointX, y);
     }
