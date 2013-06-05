@@ -358,6 +358,14 @@ function GameCanvas() {
             'images/sprites/road.png',
             'images/sprites/tree.png',
             'images/sprites/rubble.png',
+            'images/sprites/spray_6.png',
+            'images/sprites/spray_7.png',
+            'images/sprites/spray_8.png',
+            'images/sprites/spray_11.png',
+            'images/sprites/spray_12.png',
+            'images/sprites/spray_15.png',
+            'images/sprites/spray_16.png',
+            'images/sprites/spray_17.png',
             ''  //Required for hack
         ];
         var count = 0;
@@ -520,8 +528,9 @@ function GameCanvas() {
 
                 //Truck operations
                 for(i in trucks) {
+                    trucks[i].setSprayDirection(-1);        //Remove the spray
+
                     if( trucks[i].Stopped == true && onSec) {
-                        trucks[i].Repaint(canvas);
                         var sur = GetSurroundings(trucks[i].last());
                         for(j in sur) {
 
@@ -529,14 +538,14 @@ function GameCanvas() {
                                 foundTarget = true;
                                 grid[sur[j]].sprayed();
                                 GameCanvas.points.addPoint();
+                                trucks[i].setSprayDirection(j); //Spray in a dir
                             }
                         }
+                        
                     }else{
                         trucks[i].Move();
-                        trucks[i].Repaint(canvas);
-                        // if(trucks[i].last() != null && !trucks[i].stopped)
-                            // grid[trucks[i].last()].repaint(canvas);
                     }
+                    trucks[i].Repaint(canvas);
                 }
 
                 if(onSec && (GameCanvas.points.getTime()%fireFrequency == 0) ) {
