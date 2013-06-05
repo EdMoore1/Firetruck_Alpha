@@ -20,4 +20,4 @@ div#timer { margin: auto; width: 100%; text-align: center; }
 div#footer { margin-top: 50px; width: 1024px; text-align: center; }
 
 table td{ font-size: 16px; text-align: left; }
-table th{ font-size: 24px; text-align: left; }
+table th, h2{ font-size: 24px; text-align: left; }
