@@ -416,15 +416,17 @@ function GameCanvas() {
                 var x = e.pageX - c.offsetLeft;
                 var y = e.pageY - c.offsetTop;
 
-                if(x >= 75 && x <= 200){
-                    if(y >= 115 && y <= 115+35) {
-                        start();
-                    }else if(y >= 195 && y <= 225){
-                        console.log("Load");
-                    }else if(y >= 272 && y <= 300){
-                        // canvas.drawImage(menuImg, 0, 0, GameCanvas.canvasWidth, GameCanvas.canvasHeight);
-                        // canvas.fillText(HowToPlay_Text, )
-                        console.log("How to play");
+                if(!winCondition) {
+                    if(x >= 75 && x <= 200){
+                        if(y >= 115 && y <= 115+35) {
+                            start();
+                        }else if(y >= 195 && y <= 225){
+                            console.log("Load");
+                        }else if(y >= 272 && y <= 300){
+                            // canvas.drawImage(menuImg, 0, 0, GameCanvas.canvasWidth, GameCanvas.canvasHeight);
+                            // canvas.fillText(HowToPlay_Text, )
+                            console.log("How to play");
+                        }
                     }
                 }
             }, false);
