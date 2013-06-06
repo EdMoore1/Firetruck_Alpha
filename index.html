@@ -7,13 +7,17 @@
 	<script src="js/firetruckLibrary.js" type="text/javascript"></script>
 	<script src="js/newsLibrary.js" type="text/javascript"></script>
 	<script src="js/pointsLibrary.js" type="text/javascript"></script>
+	<script src="js/keys.js" type="text/javascript"></script>
 	<link rel="stylesheet" type="text/css" href="css/style.css" />
 
 	<script type="text/javascript">
 		function validate() {
-			var key = $("#key1") +"-"+ $("#key2") +"-"+ $("#key3");
+			var key = $("#key1").val() +"-"+ $("#key2").val() +"-"+ $("#key3").val();
 
-			load(4);
+			if(keys.indexOf(key) > -1)
+				load(4);
+			else
+				alert("Invalid key!");
 		}
 	</script>
 </head>
