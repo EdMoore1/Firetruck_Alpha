@@ -47,7 +47,11 @@ function FireTruck(Path) {
                 this.Stopped = true;
             }
 
-            this.target++;
+            if(GameCanvas.onFire(this.target+1))
+                this.Stopped = true;
+            else
+                this.target++;
+
             this.xOffset = 0;
             this.yOffset = 0;
         }else{
@@ -139,8 +143,6 @@ function FireTruck(Path) {
             if( [15,16,17].indexOf(i) != -1)
                 this.sprayY = this.sprayOffset;
         }
-        // else
-            // console.log('whatisthis: ' + i);
     };
 
     FireTruck.prototype.Repaint = function(canvas) {
@@ -152,7 +154,8 @@ function FireTruck(Path) {
 
         //Draw the spray if required
         if(this.Stopped && this.spraySpriteIndex >= 0 || this.sprayCount > 0) {
-            canvas.drawImage(sprayImg[this.spraySpriteIndex], Math.floor(x+this.sprayX), Math.floor(y+this.sprayY), GameCanvas.blockSize, GameCanvas.blockSize* (sprayImg[this.spraySpriteIndex].height/sprayImg[this.spraySpriteIndex].width));
+            if( sprayImg[this.spraySpriteIndex] != undefined)
+                canvas.drawImage(sprayImg[this.spraySpriteIndex], Math.floor(x+this.sprayX), Math.floor(y+this.sprayY), GameCanvas.blockSize, GameCanvas.blockSize* (sprayImg[this.spraySpriteIndex].height/sprayImg[this.spraySpriteIndex].width));
             if(this.sprayCount++ == GameCanvas.FPS) this.sprayCount=0;
         }
     };

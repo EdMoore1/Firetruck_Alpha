@@ -514,7 +514,6 @@ function GameCanvas() {
                                         toBurn.push(sur[j]);
                             }
                             GameCanvas.points.addDamage(grid[i].cost/grid[i].totalHealth);
-                            // console.log(grid[i].cost/grid[i].totalHealth + ' damage taken.');
                         }
                     }
 
@@ -558,12 +557,17 @@ function GameCanvas() {
                     toBurn.push(burnTarget);
                 }
 
-                //Dont burn tiles that a truck is on
+                //Dont burn tiles that a truck is on or around (causes a problem with the movement)
                 if(onSec)
                     for(i in trucks)
-                        for(j in toBurn)
-                            if(trucks[i].Pos == toBurn[j])
+                        for(j in toBurn) {
+                            var sur = GetDirectSurroundings(trucks[i].Pos);
+                            var tmp = new Array(trucks[i].Pos);
+
+                            if( $.inArray(toBurn[j], $.merge(sur,tmp)) != -1 ||
+                                trucks[i].Pos == toBurn[j] )
                                 delete toBurn[j];
+                        }
 
                 //Burn the tiles required
                 if(onSec)
