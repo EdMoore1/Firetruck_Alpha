@@ -405,7 +405,7 @@ function GameCanvas() {
             canvas.drawImage(menuImg, 0, 0, GameCanvas.canvasWidth, GameCanvas.canvasHeight);
 
             //Menu Options
-            var MenuOpt = ["Play", "Load", "How to Play"];
+            var MenuOpt = ["Play", /*"Load",*/ "How to Play"];
             canvas.fillStyle = "rgb(255,255,255);";
             canvas.font="42px Arial";
             for(var i in MenuOpt)
@@ -421,11 +421,12 @@ function GameCanvas() {
                         if(y >= 115 && y <= 115+35) {
                             start();
                         }else if(y >= 195 && y <= 225){
-                            console.log("Load");
+                            // console.log("Load");
+                            load(6);
                         }else if(y >= 272 && y <= 300){
                             // canvas.drawImage(menuImg, 0, 0, GameCanvas.canvasWidth, GameCanvas.canvasHeight);
                             // canvas.fillText(HowToPlay_Text, )
-                            console.log("How to play");
+                            // console.log("How to play");
                         }
                     }
                 }
