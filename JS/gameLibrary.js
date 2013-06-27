@@ -301,16 +301,18 @@ function GameCanvas() {
             img.src = 'images/failed.png';
 
         img.onload = function() {
+            //Print the Victory Message
+            var tmpPts = GameCanvas.points.getPoints();
             GameCanvas.news.destroy();
             GameCanvas.points.destroy();
             canvas.clearRect(0,0,GameCanvas.canvasWidth, GameCanvas.canvasHeight);
             canvas.drawImage(img, 0,0,GameCanvas.canvasWidth, GameCanvas.canvasHeight);
+
+            //Print the Points and Time taken
+            canvas.font = "48px Arial";
+            canvas.fillStyle = "rgb(204,0,0);";
+            canvas.fillText (tmpPts, 440, 595);
         }
-
-        //Print the Victory Message
-
-        //Print the Points and Time taken
-
     }
 
     GameCanvas.prototype.Setup = function() {

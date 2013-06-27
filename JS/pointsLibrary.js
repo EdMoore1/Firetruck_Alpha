@@ -48,6 +48,10 @@ function PointsFeed() {
         return Math.floor(timer/1000);
     }
 
+    PointsFeed.prototype.getPoints = function() {
+        return points;
+    }
+
     PointsFeed.prototype.getms = function() {
         return timer;
     }
