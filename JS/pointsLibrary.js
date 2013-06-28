@@ -40,6 +40,10 @@ function PointsFeed() {
         points++;
     }
 
+    PointsFeed.prototype.addPoints = function(n) {
+        points+= n;
+    }
+
     PointsFeed.prototype.addDamage = function(dmg) {
         damage += Math.ceil(dmg);
     }

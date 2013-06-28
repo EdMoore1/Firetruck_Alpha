@@ -773,13 +773,13 @@ function GameCanvas() {
         }
     }
 
-    GameCanvas.StartDebugging = function (tile) { 
-        for( var i in grid ) {
-            grid[i] = new Grass();
-            grid[i].init(i);
-            grid[i].repaint(canvas);
+    //Catch key press
+    window.addEventListener("keydown", function(e) {
+        if(e.keyCode == 69) { //e
+            if(GameCanvas.news.isTypo()) {
+                GameCanvas.news.spotTypo();
+                GameCanvas.points.addPoints(100);
+            }
         }
-
-        grid[tile].burn();
-    };
+    }, true);
 }

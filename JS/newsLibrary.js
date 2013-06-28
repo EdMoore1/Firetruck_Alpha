@@ -17,6 +17,7 @@ function NewsFeed() {
 
     var possible = "abcdefghijklmnopqrstuvwxyz";
     var items = ["news 1", "news 2", "news 3"];
+    var correctedText = "Typo spotted!";
 
 
     String.prototype.replaceAt=function(index, character) {
@@ -36,7 +37,7 @@ function NewsFeed() {
 
     var newStream = function() {
         currentItem = Math.floor(Math.random() * items.length);
-        if( Math.random() < 0.20 ) {
+        if( Math.random() < 0.20 || true) {
             //Insert typo
             var rep = Math.floor(Math.random()*items[currentItem].length+1);
             var randChar = possible.charAt(Math.floor(Math.random() * possible.length));
@@ -72,7 +73,12 @@ function NewsFeed() {
         }
     }
 
+    NewsFeed.prototype.isTypo = function() {
+        return typo;
+    }
 
-    //Catch key press
-    
+    NewsFeed.prototype.spotTypo = function() {
+        if (typo) currentText = correctedText;
+        typo = false;
+    }
 }
