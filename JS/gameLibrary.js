@@ -311,7 +311,7 @@ function GameCanvas() {
             //Print the Points and Time taken
             if(won){
                 canvas.font = "48px Arial";
-                canvas.fillStyle = "rgb(204,0,0);";
+                canvas.fillStyle = "rgb(204,0,0)";
                 canvas.fillText (tmpPts, 440, 595);
             }
         }
@@ -376,7 +376,6 @@ function GameCanvas() {
 
         //Show the loading page
         var loadingImg = new Image();
-        var menuImg = new Image();
         var temp = new Image();
         var complete = false;
         loadingImg.src = 'images/loading.png';
@@ -385,8 +384,40 @@ function GameCanvas() {
 
             if(count == preLoadedImages.length) {
                 complete = true;
+                var menuImg = new Image();
+                menuImg.onload = function() {
+                    canvas.clearRect(0,0,GameCanvas.canvasWidth, GameCanvas.canvasHeight);
+                    canvas.drawImage(this, 0, 0, GameCanvas.canvasWidth, GameCanvas.canvasHeight);
+
+                    //Menu Options
+                    var MenuOpt = ["Play", /*"Load",*/ "How to Play"];
+                    canvas.fillStyle = "rgb(255,255,255)";
+                    canvas.font="42px Arial";
+                    for(var i in MenuOpt)
+                        // canvas.fillText(MenuOpt[i], 150, 250+(i*75));
+                        canvas.fillText(MenuOpt[i], 75, 150+(i*75));
+
+                    c.addEventListener("mousedown", function(e) {
+                        var x = e.pageX - c.offsetLeft;
+                        var y = e.pageY - c.offsetTop;
+
+                        if(!winCondition) {
+                            if(x >= 75 && x <= 200){
+                                if(y >= 115 && y <= 115+35) {
+                                    start();
+                                }else if(y >= 195 && y <= 225){
+                                    // console.log("Load");
+                                    load(6);
+                                }else if(y >= 272 && y <= 300){
+                                    // canvas.drawImage(menuImg, 0, 0, GameCanvas.canvasWidth, GameCanvas.canvasHeight);
+                                    // canvas.fillText(HowToPlay_Text, )
+                                    // console.log("How to play");
+                                }
+                            }
+                        }
+                    }, false);
+                };
                 menuImg.src = 'images/menu.png';
-                menuImg.onload = loadMenu();
                 return;
             }
 
@@ -401,8 +432,8 @@ function GameCanvas() {
             canvas.fillRect(LOADING_BAR_X, LOADING_BAR_Y, LOADING_BAR_WIDTH * (count/(preLoadedImages.length-1)), LOADING_BAR_HEIGHT);
 
             count++;
-            temp.src = preLoadedImages[count];
             temp.onload = loadNext();
+            temp.src = preLoadedImages[count];
         }
 
         loadingImg.onload = function () {
@@ -415,12 +446,12 @@ function GameCanvas() {
         // setTimeout(function(){
         function loadMenu() {
             canvas.clearRect(0,0,GameCanvas.canvasWidth, GameCanvas.canvasHeight);
-            canvas.drawImage(menuImg, 0, 0, GameCanvas.canvasWidth, GameCanvas.canvasHeight);
-            console.log('drawing');
+            // canvas.drawImage(this, 0, 0, GameCanvas.canvasWidth, GameCanvas.canvasHeight);
+            console.log(this);
 
             //Menu Options
             var MenuOpt = ["Play", /*"Load",*/ "How to Play"];
-            canvas.fillStyle = "rgb(255,255,255);";
+            canvas.fillStyle = "rgb(255,255,255)";
             canvas.font="42px Arial";
             for(var i in MenuOpt)
                 // canvas.fillText(MenuOpt[i], 150, 250+(i*75));
