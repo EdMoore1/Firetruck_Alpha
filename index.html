@@ -62,12 +62,7 @@
 			</div>
 
 			<div id="gameContent">
-				<p>This game is restricted to MacICT Clients only. Please enter your serial key below.</p>
-				<br/>
-				<input class="serial" id="key1" name="key1" maxlength="3" placeholder="xxx" />-
-				<input class="serial" id="key2" name="key2" maxlength="4" placeholder="xxxx" />-
-				<input class="serial" id="key3" name="key3" maxlength="3" placeholder="xxx" />
-				<input class="serial" type="submit" value="Play!" onClick="validate();" />
+				<p>This game requires javascript to run. Please try a different browser</p>
 			</div>
 			<div id="gameContent2">
 				<!-- <div id="points" width="1024px" height="30px"><div id="timer"></div></div> -->
@@ -154,9 +149,8 @@
 			if(num == 3 && mobile){
 				//TODO: Redirect to game by itself
 			}else if(num == 3){
-				//Initialise the game
-				var game = new GameCanvas(levels);
-				game.Setup();
+				window.open("game.php", "_blank", fullscreen=1,directories=0,menubar=0,status=0);
+				return;
 			}
 
 			for(var i in arr)
