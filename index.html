@@ -1,25 +1,7 @@
 <html>
 <head>
 	<script src="js/jQuery.js" type="text/javascript"></script>
-	<script src="js/levels.js" type="text/javascript"></script>
-	<script src="js/gameLibrary.js" type="text/javascript"></script>
-	<script src="js/elementsLibrary.js" type="text/javascript"></script>
-	<script src="js/firetruckLibrary.js" type="text/javascript"></script>
-	<script src="js/newsLibrary.js" type="text/javascript"></script>
-	<script src="js/pointsLibrary.js" type="text/javascript"></script>
-	<script src="js/keys.js" type="text/javascript"></script>
 	<link rel="stylesheet" type="text/css" href="css/style.css" />
-
-	<script type="text/javascript">
-		function validate() {
-			var key = $("#key1").val() +"-"+ $("#key2").val() +"-"+ $("#key3").val();
-
-			if(keys.indexOf(key) > -1)
-				load(4);
-			else
-				alert("Invalid key!");
-		}
-	</script>
 </head>
 
 <body>
@@ -65,10 +47,7 @@
 				<p>This game requires javascript to run. Please try a different browser</p>
 			</div>
 			<div id="gameContent2">
-				<!-- <div id="points" width="1024px" height="30px"><div id="timer"></div></div> -->
-				<canvas id="points" width="1024px" height="20px"></canvas>
-				<canvas id="game" width="1024px" height="640px"></canvas>
-				<canvas id="news" width="1024px" height="20px"></canvas>
+				<p>This game requires javascript to run. Please try a different browser</p>
 			</div>
 
 			<div id="creditsContent">
@@ -136,11 +115,6 @@
 	</div>
 
 	<script type="text/javascript">
-		//Preload the loading background
-		var temp = new Image();
-		temp.src = 'images/loading.png';
-
-
 		function load(num) {
 			var arr = ["homeContent", "aboutContent", "storyContent", "gameContent", "gameContent2", "creditsContent", "howToPlay"];
 			//TODO: Check if mobile

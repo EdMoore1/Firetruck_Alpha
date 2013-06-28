@@ -1,3 +1,2 @@
 * Catch key presses & reward for catching the mistakes
 * Write instructions
-* Fix bug with loading screen

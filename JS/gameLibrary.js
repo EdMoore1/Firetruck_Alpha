@@ -427,12 +427,11 @@ function GameCanvas() {
             //Border
             canvas.fillStyle = LOADING_BAR_COLOR;
             canvas.lineWidth = 1;
-            // canvas.fillRect(LOADING_BAR_X-1, LOADING_BAR_Y-1, LOADING_BAR_WIDTH+2, LOADING_BAR_HEIGHT+2);
             canvas.rect(LOADING_BAR_X-1, LOADING_BAR_Y-1, LOADING_BAR_WIDTH+2, LOADING_BAR_HEIGHT+2);
             canvas.strokeStyle = 'rgb(0,0,0)';
             canvas.stroke();
             //Bar
-            console.log("Loaded "+preLoadedImages[count]+" ("+count+"). BarLength: "+ (LOADING_BAR_WIDTH *(count/(preLoadedImages.length-1))) +"/"+LOADING_BAR_WIDTH);
+            // console.log("Loaded "+preLoadedImages[count]+" ("+count+"). BarLength: "+ (LOADING_BAR_WIDTH *(count/(preLoadedImages.length-1))) +"/"+LOADING_BAR_WIDTH);
             canvas.fillRect(LOADING_BAR_X, LOADING_BAR_Y, LOADING_BAR_WIDTH * (count/(preLoadedImages.length-1)), LOADING_BAR_HEIGHT);
 
             setTimeout(function() {

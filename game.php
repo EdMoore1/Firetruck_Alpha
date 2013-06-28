@@ -53,7 +53,6 @@
 
 <body>
 	<div id="gameContent2">
-		<!-- <div id="points" width="1024px" height="30px"><div id="timer"></div></div> -->
 		<canvas id="points" width="1024px" height="20px"></canvas>
 		<canvas id="game" width="1024px" height="640px"></canvas>
 		<canvas id="news" width="1024px" height="20px"></canvas>
@@ -67,6 +66,7 @@
 	<title>Please login</title>
 </head>
 <body>
+	<img src="images/loading.png" style="display: none;" />
 	<form action="<?=$_SERVER['REQUEST_URI']?>" method="POST">
 		<p>This game is restricted to MacICT Clients only. Please enter your serial key below.</p>
 		<br/>
