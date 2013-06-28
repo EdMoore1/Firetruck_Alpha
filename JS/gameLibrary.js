@@ -386,36 +386,39 @@ function GameCanvas() {
                 complete = true;
                 var menuImg = new Image();
                 menuImg.onload = function() {
-                    canvas.clearRect(0,0,GameCanvas.canvasWidth, GameCanvas.canvasHeight);
-                    canvas.drawImage(this, 0, 0, GameCanvas.canvasWidth, GameCanvas.canvasHeight);
 
-                    //Menu Options
-                    var MenuOpt = ["Play", /*"Load",*/ "How to Play"];
-                    canvas.fillStyle = "rgb(255,255,255)";
-                    canvas.font="42px Arial";
-                    for(var i in MenuOpt)
-                        // canvas.fillText(MenuOpt[i], 150, 250+(i*75));
-                        canvas.fillText(MenuOpt[i], 75, 150+(i*75));
+                    setTimeout( function() {
+                        canvas.clearRect(0,0,GameCanvas.canvasWidth, GameCanvas.canvasHeight);
+                        canvas.drawImage(menuImg, 0, 0, GameCanvas.canvasWidth, GameCanvas.canvasHeight);
 
-                    c.addEventListener("mousedown", function(e) {
-                        var x = e.pageX - c.offsetLeft;
-                        var y = e.pageY - c.offsetTop;
+                        //Menu Options
+                        var MenuOpt = ["Play", /*"Load",*/ "How to Play"];
+                        canvas.fillStyle = "rgb(255,255,255)";
+                        canvas.font="42px Arial";
+                        for(var i in MenuOpt)
+                            // canvas.fillText(MenuOpt[i], 150, 250+(i*75));
+                            canvas.fillText(MenuOpt[i], 75, 150+(i*75));
 
-                        if(!winCondition) {
-                            if(x >= 75 && x <= 200){
-                                if(y >= 115 && y <= 115+35) {
-                                    start();
-                                }else if(y >= 195 && y <= 225){
-                                    // console.log("Load");
-                                    load(6);
-                                }else if(y >= 272 && y <= 300){
-                                    // canvas.drawImage(menuImg, 0, 0, GameCanvas.canvasWidth, GameCanvas.canvasHeight);
-                                    // canvas.fillText(HowToPlay_Text, )
-                                    // console.log("How to play");
+                        c.addEventListener("mousedown", function(e) {
+                            var x = e.pageX - c.offsetLeft;
+                            var y = e.pageY - c.offsetTop;
+
+                            if(!winCondition) {
+                                if(x >= 75 && x <= 200){
+                                    if(y >= 115 && y <= 115+35) {
+                                        start();
+                                    }else if(y >= 195 && y <= 225){
+                                        // console.log("Load");
+                                        load(6);
+                                    }else if(y >= 272 && y <= 300){
+                                        // canvas.drawImage(menuImg, 0, 0, GameCanvas.canvasWidth, GameCanvas.canvasHeight);
+                                        // canvas.fillText(HowToPlay_Text, )
+                                        // console.log("How to play");
+                                    }
                                 }
                             }
-                        }
-                    }, false);
+                        }, false);
+                    }, 1000);
                 };
                 menuImg.src = 'images/menu.png';
                 return;
@@ -429,11 +432,14 @@ function GameCanvas() {
             canvas.strokeStyle = 'rgb(0,0,0)';
             canvas.stroke();
             //Bar
+            console.log("Loaded "+preLoadedImages[count]+" ("+count+"). BarLength: "+ (LOADING_BAR_WIDTH *(count/(preLoadedImages.length-1))) +"/"+LOADING_BAR_WIDTH);
             canvas.fillRect(LOADING_BAR_X, LOADING_BAR_Y, LOADING_BAR_WIDTH * (count/(preLoadedImages.length-1)), LOADING_BAR_HEIGHT);
 
-            count++;
-            temp.onload = loadNext();
-            temp.src = preLoadedImages[count];
+            setTimeout(function() {
+                count++;
+                temp.onload = loadNext();
+                temp.src = preLoadedImages[count];
+            }, 100);
         }
 
         loadingImg.onload = function () {
