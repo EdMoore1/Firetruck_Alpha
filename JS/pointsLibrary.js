@@ -48,6 +48,10 @@ function PointsFeed() {
         return Math.floor(timer/1000);
     }
 
+    PointsFeed.prototype.getDamageLeft = function() {
+        return maxDamage - damage;
+    }
+
     PointsFeed.prototype.getPoints = function() {
         return points;
     }

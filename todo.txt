@@ -1,2 +1,4 @@
 * Catch key presses & reward for catching the mistakes
 * Write instructions
+* Fix Menu for IE
+* Add news items

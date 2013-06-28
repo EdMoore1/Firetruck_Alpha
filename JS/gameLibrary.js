@@ -302,7 +302,7 @@ function GameCanvas() {
 
         img.onload = function() {
             //Print the Victory Message
-            var tmpPts = GameCanvas.points.getPoints();
+            var tmpPts = GameCanvas.points.getPoints() + Math.ceil(0.10*GameCanvas.points.getDamageLeft());
             GameCanvas.news.destroy();
             GameCanvas.points.destroy();
             canvas.clearRect(0,0,GameCanvas.canvasWidth, GameCanvas.canvasHeight);
@@ -310,6 +310,7 @@ function GameCanvas() {
 
             //Print the Points and Time taken
             if(won){
+                //TODO: Include timed additional points (ie, awesome factor, time left, fires extinguished)
                 canvas.font = "48px Arial";
                 canvas.fillStyle = "rgb(204,0,0)";
                 canvas.fillText (tmpPts, 440, 595);
