@@ -52,12 +52,12 @@
 </head>
 
 <body>
-			<div id="gameContent2">
-				<!-- <div id="points" width="1024px" height="30px"><div id="timer"></div></div> -->
-				<canvas id="points" width="1024px" height="20px"></canvas>
-				<canvas id="game" width="1024px" height="640px"></canvas>
-				<canvas id="news" width="1024px" height="20px"></canvas>
-			</div>
+	<div id="gameContent2">
+		<!-- <div id="points" width="1024px" height="30px"><div id="timer"></div></div> -->
+		<canvas id="points" width="1024px" height="20px"></canvas>
+		<canvas id="game" width="1024px" height="640px"></canvas>
+		<canvas id="news" width="1024px" height="20px"></canvas>
+	</div>
 
 </body>
 </html>

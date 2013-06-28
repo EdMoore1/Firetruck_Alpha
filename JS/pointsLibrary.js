@@ -73,7 +73,7 @@ function PointsFeed() {
         if(secs < 10) secs = "0" + secs;
 
         canvas.font="14px Arial";
-        canvas.fillStyle = "rgb(255,255,255);";
+        canvas.fillStyle = "rgb(255,255,255)";
 
         //Print the info out
         canvas.fillText( "Damage ($): " + damage +"/"+ maxDamage, damageX, y);

@@ -57,9 +57,9 @@ function NewsFeed() {
     NewsFeed.prototype.repaint = function() {
         if( writing && !GameCanvas.paused() && !NewsFeed.disabled ) {
             canvas.font="18px Arial";
-            canvas.fillStyle = "rgb(255,255,255);";
+            canvas.fillStyle = "rgb(255,255,255)";
             canvas.fillRect(0, 0, NewsFeed.canvasWidth, NewsFeed.canvasHeight);
-            canvas.fillStyle = "rgb(0,0,0);";
+            canvas.fillStyle = "rgb(0,0,0)";
             canvas.fillText( currentText, x, y );
 
             x -= (NewsFeed.moveSpeed);

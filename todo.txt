@@ -1,4 +1,3 @@
-* Include final game over screen for finished all levels.
-* Remove elements from game
 * Catch key presses & reward for catching the mistakes
-* Move across to the PHP authentication
+* Write instructions
+* Fix bug with loading screen

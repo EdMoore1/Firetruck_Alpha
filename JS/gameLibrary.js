@@ -309,9 +309,11 @@ function GameCanvas() {
             canvas.drawImage(img, 0,0,GameCanvas.canvasWidth, GameCanvas.canvasHeight);
 
             //Print the Points and Time taken
-            canvas.font = "48px Arial";
-            canvas.fillStyle = "rgb(204,0,0);";
-            canvas.fillText (tmpPts, 440, 595);
+            if(won){
+                canvas.font = "48px Arial";
+                canvas.fillStyle = "rgb(204,0,0);";
+                canvas.fillText (tmpPts, 440, 595);
+            }
         }
     }
 
@@ -374,37 +376,47 @@ function GameCanvas() {
 
         //Show the loading page
         var loadingImg = new Image();
+        var menuImg = new Image();
         var temp = new Image();
+        var complete = false;
         loadingImg.src = 'images/loading.png';
+
+        function loadNext() {
+
+            if(count == preLoadedImages.length) {
+                complete = true;
+                menuImg.src = 'images/menu.png';
+                menuImg.onload = loadMenu();
+                return;
+            }
+
+            //Border
+            canvas.fillStyle = LOADING_BAR_COLOR;
+            canvas.lineWidth = 1;
+            // canvas.fillRect(LOADING_BAR_X-1, LOADING_BAR_Y-1, LOADING_BAR_WIDTH+2, LOADING_BAR_HEIGHT+2);
+            canvas.rect(LOADING_BAR_X-1, LOADING_BAR_Y-1, LOADING_BAR_WIDTH+2, LOADING_BAR_HEIGHT+2);
+            canvas.strokeStyle = 'rgb(0,0,0)';
+            canvas.stroke();
+            //Bar
+            canvas.fillRect(LOADING_BAR_X, LOADING_BAR_Y, LOADING_BAR_WIDTH * (count/(preLoadedImages.length-1)), LOADING_BAR_HEIGHT);
+
+            count++;
+            temp.src = preLoadedImages[count];
+            temp.onload = loadNext();
+        }
 
         loadingImg.onload = function () {
             canvas.drawImage(loadingImg, 0, 0, GameCanvas.canvasWidth, GameCanvas.canvasHeight);
 
-            //Draw the loadingBar
-            for(var i in preLoadedImages) {
-                //Border
-                canvas.fillStyle = LOADING_BAR_COLOR;
-                canvas.lineWidth = 1;
-                // canvas.fillRect(LOADING_BAR_X-1, LOADING_BAR_Y-1, LOADING_BAR_WIDTH+2, LOADING_BAR_HEIGHT+2);
-                canvas.rect(LOADING_BAR_X-1, LOADING_BAR_Y-1, LOADING_BAR_WIDTH+2, LOADING_BAR_HEIGHT+2);
-                canvas.strokeStyle = 'rgb(0,0,0)';
-                canvas.stroke();
-                //Bar
-                canvas.fillRect(LOADING_BAR_X, LOADING_BAR_Y, LOADING_BAR_WIDTH * Math.ceil(count/preLoadedImages.length), LOADING_BAR_HEIGHT);
-
-                temp.src = preLoadedImages[i];
-                count++;
-            }
+            temp.onload = loadNext();
+            temp.src = preLoadedImages[0];
         };
 
-
-        //Load this stuff first
-        var menuImg = new Image();
-        menuImg.src = 'images/menu.png';
-
-        setTimeout(function(){
+        // setTimeout(function(){
+        function loadMenu() {
             canvas.clearRect(0,0,GameCanvas.canvasWidth, GameCanvas.canvasHeight);
             canvas.drawImage(menuImg, 0, 0, GameCanvas.canvasWidth, GameCanvas.canvasHeight);
+            console.log('drawing');
 
             //Menu Options
             var MenuOpt = ["Play", /*"Load",*/ "How to Play"];
@@ -433,7 +445,7 @@ function GameCanvas() {
                     }
                 }
             }, false);
-        }, 2000);
+        };
     }
 
 
@@ -651,6 +663,11 @@ function GameCanvas() {
         if(!winCondition){
             if(nextLevel)
                 currentLevel++;
+
+            if(currentLevel == GameCanvas.levels.length) {
+                alert('You have completed all the initally designed levels!\nTalk to MacICT Staff about creating your own!');
+                window.close();
+            }
             start();
         }else{
             lastDragged = null;
