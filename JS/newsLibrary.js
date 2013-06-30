@@ -37,7 +37,7 @@ function NewsFeed() {
 
     var newStream = function() {
         currentItem = Math.floor(Math.random() * items.length);
-        if( Math.random() < 0.20 || true) {
+        if( Math.random() < 0.20) {
             //Insert typo
             var rep = Math.floor(Math.random()*items[currentItem].length+1);
             var randChar = possible.charAt(Math.floor(Math.random() * possible.length));
