@@ -12,12 +12,46 @@ function NewsFeed() {
     var x;
     var y;
     var writing = false;
-    var PIXELS_OVERFLOW = 50;
+    var PIXELS_OVERFLOW = 500;
     var typo = false;
 
     var possible = "abcdefghijklmnopqrstuvwxyz";
-    var items = ["news 1", "news 2", "news 3"];
     var correctedText = "Typo spotted!";
+
+    //Got a lot of this from theonion.com
+    var items = ["Martians invade earth!",
+                 "Man loves cats so much, Adopts 30 Cats",
+                 "Prime Minister Trapped!",
+                 "Grandma turns 100!",
+                 "Frog Convention",
+                 "Lucky old womand getting wheeled around airport",
+                 "Stanley Cup Shot 11 Times During Chicago Blackhawks Victory Parade",
+                 "Stunning E3 Announcement Reveals New Video Game Consoles To Phase Out Graphics Entirely",
+                 "New Ultra-Realistic Console Game Has Users Press B Repeatedly To Make Character Breathe",
+                 "Scientists Probably Discover A New Species Of Frog",
+                 "Scientific Breakthrough Reveals Stars Consist Primarily Of Twinkles",
+                 "Strange New Culture Forming On Other End Of Office",
+                 "Local Laundromat Employs Social Media Coordinator",
+                 "Financial Sector Thinks It's About Ready To Ruin World Again",
+                 "City Of Miami Delighted By Impromptu Parade",
+                 "Singer Recovering In Intensive Care Unit After Being Badly Booed",
+                 "15 Wounded in Mass Cliche",
+                 "Everybody Wins National Spelling Bee",
+                 "Poll: 4% of Americans Vampires",
+                 "US Poetry Rate Soars to New High",
+                 "Worker Replaced By Palm Tree, Gets Promoted.",
+                 "Mutant Crabgrass Threatens Corn Crop",
+                 "Jim Carrey named as head of the FBI",
+                 "Man Wakes Up Speaking Morse Code",
+                 "WHO Warns Of Vampire Pandemic",
+                 "Bob Dylan and The Rolling Stones To Record An Album Together",
+                 "Willie Nelson and Honey Boo Boo To Star In A Western",
+                 "Facebook helps cops find their lost puppy",
+                 "iPhone 6 images leaked - will it be a winner?",
+                 "Earth splitting in two"];
+
+
+
 
 
     String.prototype.replaceAt=function(index, character) {

@@ -393,7 +393,7 @@ function GameCanvas() {
                         canvas.drawImage(menuImg, 0, 0, GameCanvas.canvasWidth, GameCanvas.canvasHeight);
 
                         //Menu Options
-                        var MenuOpt = ["Play", /*"Load",*/ "How to Play"];
+                        var MenuOpt = ["Play", /*"Load", "How to Play"*/];
                         canvas.fillStyle = "rgb(255,255,255)";
                         canvas.font="42px Arial";
                         for(var i in MenuOpt)

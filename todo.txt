@@ -1,2 +1,2 @@
 * Fix Menu for IE
-* Add news items
+* Write better UM
